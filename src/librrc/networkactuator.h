@@ -8,7 +8,7 @@
 
 #include <rnp_networkmanager.h>
 
-#include "Storage/logController.h"
+#include "Helpers/rrclog.h"
 
 struct NetworkActuatorState : public RocketActuatorState{
     //cant think of any other members required here currently
@@ -36,8 +36,8 @@ class NetworkActuator: public RocketActuator{
          *        networked sensors
          * @param networkmanager reference to the network manager
          */
-        NetworkActuator(uint8_t id,LogController& logcontroller,uint8_t address,uint8_t sourceService,uint8_t destinationService,RnpNetworkManager& networkmanager):
-        RocketActuator(id,RocketComponentTypes::TYPES::NET_ACTUATOR,logcontroller),
+        NetworkActuator(uint8_t id,uint8_t address,uint8_t sourceService,uint8_t destinationService,RnpNetworkManager& networkmanager,LIBRRC::RRCLog::LogCallback_t logcb):
+        RocketActuator(id,RocketComponentTypes::TYPES::NET_ACTUATOR,logcb),
         _address(address),
         _sourceService(sourceService),
         _destinationService(destinationService),

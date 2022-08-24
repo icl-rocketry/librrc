@@ -15,7 +15,7 @@ struct NetworkSensorState: public RocketSensorState{
 class NetworkSensor:public RocketSensor{
 
     public:
-        NetworkSensor(uint8_t id,uint8_t address,uint8_t sourceService,uint8_t destinationService,RnpNetworkManager& networkmanager,RRCLog::LogCallback_t logcb):
+        NetworkSensor(uint8_t id,uint8_t address,uint8_t sourceService,uint8_t destinationService,RnpNetworkManager& networkmanager,LIBRRC::RRCLog::LogCallback_t logcb):
         RocketSensor(id,RocketComponentTypes::TYPES::NET_SENSOR,logcb),
         _address(address),
         _sourceService(sourceService),

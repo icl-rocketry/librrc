@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <string>
 
-#include "Helpers/bitwiseflagmanager.h"
+#include "Helpers/LIBRRC::BitwiseFlagManager.h"
 #include "Helpers/rrclog.h"
 
 #include <ArduinoJson.h>
@@ -27,7 +27,7 @@ enum class COMPONENT_STATUS_FLAGS:uint16_t{
 using component_status_flags_t = uint16_t;
 // using system_flag_t = std::underlying_type<SYSTEM_FLAG>::type;
 
-struct RocketComponentState : public BitwiseFlagManager<COMPONENT_STATUS_FLAGS,component_status_flags_t>
+struct RocketComponentState : public LIBRRC::BitwiseFlagManager<COMPONENT_STATUS_FLAGS,component_status_flags_t>
 {
 
     uint32_t lastNewStateUpdateTime;
@@ -42,7 +42,7 @@ struct RocketComponentState : public BitwiseFlagManager<COMPONENT_STATUS_FLAGS,c
      */
     void trackRemoteStatus(uint16_t remoteState)
     {
-        BitwiseFlagManager::_statusString = remoteState;
+        LIBRRC::BitwiseFlagManager::_statusString = remoteState;
     }
 };
 

@@ -23,7 +23,7 @@
 template<class Object,class Derived>
 class DynamicHandlerBase{
     public:
-        DynamicHandlerBase(RRCLog::LogCallback_t logcb):
+        DynamicHandlerBase(LIBRRC::RRCLog::LogCallback_t logcb):
         _logcb(logcb)
         {};
 
@@ -63,7 +63,7 @@ class DynamicHandlerBase{
         };
         
         // LogController& _logcontroller;
-        RRCLog::LogCallback_t _logcb;
+        LIBRRC::RRCLog::LogCallback_t _logcb;
 
     private:
         /**

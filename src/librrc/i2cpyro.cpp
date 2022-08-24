@@ -3,7 +3,8 @@
 #include "rocketactuator.h"
 #include "rocketcomponenttype.h"
 
-#include "Storage/logController.h"
+// #include "Storage/logController.h"
+#include "Helpers/rrclog.h"
 
 #include <esp_task.h>
 
@@ -12,8 +13,8 @@
 
 #include <Wire.h>
 
-I2CPyro::I2CPyro(uint8_t id,LogController& logcontroller,uint8_t address,uint8_t channel,bool continuityPolarity,TwoWire &wire):
-RocketActuator(id,RocketComponentTypes::TYPES::I2C_ACT_PYRO,logcontroller),
+I2CPyro::I2CPyro(uint8_t id,uint8_t address,uint8_t channel,bool continuityPolarity,TwoWire &wire,LIBRRC::RRCLog::LogCallback_t logcb):
+RocketActuator(id,RocketComponentTypes::TYPES::I2C_ACT_PYRO,logcb),
 _address(address),
 _channel(channel),
 pinsValid(true),
@@ -70,19 +71,19 @@ void I2CPyro::arm(){
         _state.deleteFlag(COMPONENT_STATUS_FLAGS::DISARMED);
         _state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL); // arm this shit
     }else{
-        _logcontroller.log("Pyro: " + std::to_string(_id) + " arming failed due to errors: " + std::to_string(_state.getStatus()));
+        _logcb("Pyro: " + std::to_string(_id) + " arming failed due to errors: " + std::to_string(_state.getStatus()));
     }
 }
 
 void I2CPyro::execute(int32_t param)
 {
     if (!pinsValid ){
-        _logcontroller.log("Pyro: " + std::to_string(_id) + " pins invalid");
+        _logcb("Pyro: " + std::to_string(_id) + " pins invalid");
         return;
     }
     if (_state.flagSet(COMPONENT_STATUS_FLAGS::DISARMED))
     {
-        _logcontroller.log("Pyro: " + std::to_string(_id) + " tried firing while disarmed!");
+        _logcb("Pyro: " + std::to_string(_id) + " tried firing while disarmed!");
         return;
     }
 

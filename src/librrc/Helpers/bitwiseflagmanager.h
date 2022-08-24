@@ -11,7 +11,7 @@
 
 #pragma once
 #include <type_traits>
-
+namespace LIBRRC{
 template<typename T,typename T_underlying = T>
 class BitwiseFlagManager
 {
@@ -75,6 +75,5 @@ public:
 protected:
     T_underlying _statusString;
 };
-
-
+};
 

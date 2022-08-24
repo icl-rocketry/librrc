@@ -17,7 +17,7 @@
 template<class Object,class Derived>
 class ConfigurableDynamicHandler : public DynamicHandlerBase<Object,Derived> {
     public:
-        ConfigurableDynamicHandler(RRCLog::LogCallback_t logcb):
+        ConfigurableDynamicHandler(LIBRRC::RRCLog::LogCallback_t logcb):
         DynamicHandlerBase<Object,Derived>(logcb)
         {};
 

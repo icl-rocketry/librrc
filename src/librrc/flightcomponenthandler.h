@@ -25,7 +25,7 @@
 template<class Object,class Derived>
 class FlightComponentHandler : public NetworkedDynamicHandler<Object,Derived>{
     public:
-        FlightComponentHandler(RnpNetworkManager& networkmanager,uint8_t serviceID,RRCLog::LogCallback_t logcb):
+        FlightComponentHandler(RnpNetworkManager& networkmanager,uint8_t serviceID,LIBRRC::RRCLog::LogCallback_t logcb):
         NetworkedDynamicHandler<Object,Derived>(networkmanager,serviceID,logcb)
         {};
 

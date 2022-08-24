@@ -12,7 +12,7 @@
 #include "rocketactuator.h"
 #include "rocketcomponenttype.h"
 
-#include "Storage/logController.h"
+#include "Helpers/rrclog.h"
 
 #include <Wire.h>
 
@@ -28,7 +28,7 @@ class I2CPyro: public RocketActuator{
          * @param channel pyro channels 0-3
          * @param wire 
          */
-        I2CPyro(uint8_t id,LogController& logcontroller,uint8_t address,uint8_t channel,bool continuityPolarity,TwoWire &wire);
+        I2CPyro(uint8_t id,uint8_t address,uint8_t channel,bool continuityPolarity,TwoWire &wire,LIBRRC::RRCLog::LogCallback_t logcb);
 
         void arm() override;
 

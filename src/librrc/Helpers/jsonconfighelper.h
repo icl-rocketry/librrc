@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include <exception>
 
-
+namespace LIBRRC{
 namespace JsonConfigHelper{
     template<typename T>
     static void setIfContains(const JsonVariantConst config, const std::string& key, T& var, bool throwIfDoesntContain = true) {
@@ -38,4 +38,5 @@ namespace JsonConfigHelper{
     }
 
 
+};
 };

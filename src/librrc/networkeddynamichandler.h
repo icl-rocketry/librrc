@@ -17,7 +17,7 @@
 template<class Object,class Derived>
 class NetworkedDynamicHandler : public ConfigurableDynamicHandler<Object,Derived>{
     public:
-        NetworkedDynamicHandler(RnpNetworkManager& networkmanager,uint8_t serviceID,RRCLog::LogCallback_t logcb):
+        NetworkedDynamicHandler(RnpNetworkManager& networkmanager,uint8_t serviceID,LIBRRC::RRCLog::LogCallback_t logcb):
         ConfigurableDynamicHandler<Object,Derived>(logcb),
         _networkmanager(networkmanager),_serviceID(serviceID)
         {};
