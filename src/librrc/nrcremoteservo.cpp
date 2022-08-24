@@ -1,17 +1,17 @@
-#include "nrchandlerservo.h"
+#include "nrcremoteservo.h"
 #include "Helpers/rangemap.h"
 
 #include "esp32-hal-ledc.h"
 
 #include <Arduino.h>
 
-void NRCHandlerServo::setup(){
+void NRCRemoteServo::setup(){
 
     ledcSetup(_channel,50,16);
     ledcAttachPin(_gpio,_channel);
 }
 
-void NRCHandlerServo::execute_impl(packetptr_t packetptr)
+void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 {
     
     SimpleCommandPacket execute_command(*packetptr);

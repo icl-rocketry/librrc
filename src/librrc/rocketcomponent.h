@@ -42,13 +42,13 @@ struct RocketComponentState : public LIBRRC::BitwiseFlagManager<COMPONENT_STATUS
      */
     void trackRemoteStatus(uint16_t remoteState)
     {
-        LIBRRC::BitwiseFlagManager::_statusString = remoteState;
+        _statusString = remoteState;
     }
 };
 
 class RocketComponent{
     public:
-        RocketComponent(uint8_t id,RocketComponentTypes::TYPES componentType,RRCLog::LogCallback_t logcb):
+        RocketComponent(uint8_t id,RocketComponentTypes::TYPES componentType,LIBRRC::RRCLog::LogCallback_t logcb):
         _id(id),
         _componentType(componentType),
         _logcb(logcb)
@@ -81,7 +81,7 @@ class RocketComponent{
         virtual RocketComponentState* p_getState() = 0;
 
 
-        RRCLog::LogCallback_t _logcb;
+        LIBRRC::RRCLog::LogCallback_t _logcb;
             
 
 };

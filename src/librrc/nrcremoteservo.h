@@ -1,15 +1,15 @@
 #pragma once
 
-#include "nrchandleractuatorbase.h"
+#include "nrcremoteactuatorbase.h"
 
 #include <rnp_networkmanager.h>
 #include <rnp_packet.h>
 
-class NRCHandlerServo : public NRCRemoteActuatorBase<NRCHandlerServo>
+class NRCRemoteServo : public NRCRemoteActuatorBase<NRCRemoteServo>
 {
 
 public:
-    NRCHandlerServo(uint8_t gpio,
+    NRCRemoteServo(uint8_t gpio,
                     uint8_t channel,
                     RnpNetworkManager &networkmanager,
                     uint16_t min_angle = 0,

@@ -83,7 +83,7 @@ class NetworkedDynamicHandler : public ConfigurableDynamicHandler<Object,Derived
                 #ifdef _RICDEBUG 
                 throw std::runtime_error("callback not found");
                 #endif
-                this->logcb("callback not found");
+                this->_logcb("callback not found");
                 return;
             }
         };

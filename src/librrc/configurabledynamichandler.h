@@ -38,7 +38,7 @@ class ConfigurableDynamicHandler : public DynamicHandlerBase<Object,Derived> {
         void setup_impl(JsonArrayConst handlerconfig){
             for (JsonObjectConst config: handlerconfig){
                 size_t id = this->size();
-                JsonConfigHelper::checkConfigId(id,config);
+                LIBRRC::JsonConfigHelper::checkConfigId(id,config);
                 static_cast<Derived*>(this)->setupIndividual_impl(id,config);
             }
         }
