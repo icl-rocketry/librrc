@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <string>
 
-#include "Helpers/LIBRRC::BitwiseFlagManager.h"
+#include "Helpers/bitwiseflagmanager.h"
 #include "Helpers/rrclog.h"
 
 #include <ArduinoJson.h>
