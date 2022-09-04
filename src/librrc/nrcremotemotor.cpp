@@ -18,6 +18,7 @@ void NRCRemoteMotor::setup(){
 void NRCRemoteMotor::execute_impl(packetptr_t packetptr){
 
     SimpleCommandPacket execute_command(*packetptr);
+    _value = execute_command.arg; // update new position of actuator
 
     if(execute_command.arg < 0){    //reverse rotation
         ledcWrite(_channel1, 0);
