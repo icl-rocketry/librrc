@@ -44,7 +44,8 @@ public:
 protected:
 
     RnpNetworkManager& _networkmanager;
-    RocketComponentState _state;
+    LIBRRC::BitwiseFlagManager<COMPONENT_STATUS_FLAGS,component_status_flags_t> _state;
+    int32_t _value;
 
     void handlecommand(packetptr_t packetptr){
         //check packet is a command packet
@@ -79,6 +80,7 @@ protected:
         NRCStatePacket getstate_response;
         RnpHeader::generateResponseHeader(getstate_request.header,getstate_response.header);
         getstate_response.state = _state.getStatus();
+        getstate_response.value = _value;
         _networkmanager.sendPacket(getstate_response);
 
         
