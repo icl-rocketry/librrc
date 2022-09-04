@@ -28,7 +28,13 @@ public:
 
     void setup();
 
-    // this implementation doesnt need any live feedback
+    /**
+     * @brief Temporary implementation of reset. Drives servo to min angle position. This needs to be updated
+     * to be configurable.
+     * 
+     */
+    void reset();
+   
 protected:
     friend class NRCRemoteActuatorBase;
 

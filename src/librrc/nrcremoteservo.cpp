@@ -20,3 +20,8 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
     ledcWrite(_channel,LIBRRC::rangemap<uint16_t>(execute_command.arg,_min_angle,_max_angle,_min_counts,_max_counts));
 
 }
+
+void NRCRemoteServo::reset()
+{
+    ledcWrite(_channel,_min_angle);
+}

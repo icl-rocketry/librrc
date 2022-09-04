@@ -7,7 +7,7 @@
 #include "Helpers/bitwiseflagmanager.h"
 #include "Helpers/rrclog.h"
 
-#include <ArduinoJson.h>
+// #include <ArduinoJson.h>
 
 #include "rocketcomponenttype.h"
 

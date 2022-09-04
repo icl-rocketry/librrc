@@ -1,6 +1,7 @@
 #include "rocketcomponent.h"
 
 #include <string>
+#include <Arduino.h>
 
 RocketComponent::~RocketComponent(){};
 
