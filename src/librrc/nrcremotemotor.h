@@ -39,7 +39,5 @@ protected:
     static constexpr int timer_width = 12;
     static constexpr int freq = 10000;
     
-    static constexpr int counts(int usec){
-       return (int)(float(usec) / (float(1000000/freq)/float(std::pow(2,timer_width))));
-    }
+    
 };
