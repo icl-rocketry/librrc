@@ -21,6 +21,7 @@ public:
     NRCRemoteActuatorBase(networkmanager),
         _gpio(gpio),
         _channel(channel),
+        _default_angle(default_angle),
         _min_angle(min_angle),
         _max_angle(max_angle),
         _min_counts(min_counts),
@@ -43,9 +44,9 @@ protected:
 
     const uint8_t _gpio;
     const uint8_t _channel;
+    const uint16_t _default_angle;
     const uint16_t _min_angle;
     const uint16_t _max_angle;
-    const uint16_t _default_angle;
     const uint16_t _min_counts;
     const uint16_t _max_counts;
 
