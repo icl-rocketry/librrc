@@ -12,6 +12,7 @@ public:
     NRCRemoteServo(uint8_t gpio,
                     uint8_t channel,
                     RnpNetworkManager &networkmanager,
+                    uint16_t default_angle = 0,
                     uint16_t min_angle = 0,
                     uint16_t max_angle = 180,
                     uint16_t min_counts = counts(500),
@@ -44,11 +45,14 @@ protected:
     const uint8_t _channel;
     const uint16_t _min_angle;
     const uint16_t _max_angle;
+    const uint16_t _default_angle;
     const uint16_t _min_counts;
     const uint16_t _max_counts;
 
 
     void execute_impl(packetptr_t packetptr);
+
+    uint16_t angletocounts(uint16_t angle);
 
     static constexpr int timer_width = 16;
     static constexpr int freq = 50;
