@@ -16,7 +16,7 @@ public:
                     uint16_t min_angle = 0,
                     uint16_t max_angle = 180,
                     uint16_t min_counts = counts(500),
-                    uint16_t max_counts = counts(2500)
+                    uint16_t max_counts = counts(2400)
                     ): 
     NRCRemoteActuatorBase(networkmanager),
         _gpio(gpio),
@@ -60,5 +60,6 @@ protected:
     
    static constexpr int counts(int usec){
        return (int)(float(usec) / (float(1000000/freq)/float(std::pow(2,timer_width))));
+       
     }
 };

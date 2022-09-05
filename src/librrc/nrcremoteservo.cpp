@@ -26,6 +26,7 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 uint16_t NRCRemoteServo::angletocounts(uint16_t angle)
 {
     return LIBRRC::rangemap<uint16_t>(angle,_min_angle,_max_angle,_min_counts,_max_counts);
+    
 }
 
 void NRCRemoteServo::reset()
