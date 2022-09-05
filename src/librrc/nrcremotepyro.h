@@ -4,40 +4,33 @@
 
 #include <rnp_networkmanager.h>
 #include <rnp_packet.h>
+#include <esp_task.h>
+
+#include <functional>
 
 class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
 {
 
 public:
-    NRCRemotePyro(uint8_t gpio,
-                    uint8_t channel,
-                    RnpNetworkManager &networkmanager,
-                    uint16_t default_angle = 0,
-                    uint16_t min_angle = 0,
-                    uint16_t max_angle = 180,
-                    uint16_t min_counts = counts(500),
-                    uint16_t max_counts = counts(2500)
-                    ): 
+    NRCRemotePyro(uint8_t firePin,uint8_t contPin,RnpNetworkManager &networkmanager) : 
     NRCRemoteActuatorBase(networkmanager),
-        _gpio(gpio),
-        _channel(channel),
-        _default_angle(default_angle),
-        _min_angle(min_angle),
-        _max_angle(max_angle),
-        _min_counts(min_counts),
-        _max_counts(max_counts)
-        {};
+    _firePin(firePin),
+    _contPin(contPin)
+    {};
 
     void setup();
-   
+
 protected:
     friend class NRCRemoteActuatorBase;
+    const uint8_t _firePin;
+    const uint8_t _contPin;
 
-    const uint8_t _gpio;
-
-
+    TaskHandle_t async_off_task_handle = nullptr;
 
     void execute_impl(packetptr_t packetptr);
+    void arm_impl(packetptr_t packetptr);
+    void getstate_impl(packetptr_t packetptr);
 
+    void updateContinuity();
 
 };
