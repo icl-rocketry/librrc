@@ -2,7 +2,7 @@
 #include <esp_task.h>
 #include <functional>
 #include <Arduino.h>
-#include 
+
 
 
 void NRCRemotePyro::setup()
@@ -18,7 +18,7 @@ void NRCRemotePyro::setup()
 void NRCRemotePyro::arm_impl(packetptr_t packetptr)
 {
     updateContinuity();
-    static_cast<NRCRemoteActuatorBase<NRCRemotePyro>*>(this)->arm_impl(std::move(packetptr));
+    NRCRemoteActuatorBase::arm_impl(std::move(packetptr));
 }
 
 void NRCRemotePyro::updateContinuity()
@@ -48,10 +48,10 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
 
     struct TaskData_t{
         uint8_t firePin;
-        int32_t param;
+        uint32_t param;
     };
 
-    TaskData_t taskdata(_firePin,execute_command.arg);
+    TaskData_t taskdata{_firePin,execute_command.arg};
 
     if (async_off_task_handle != nullptr)
     {
@@ -79,8 +79,8 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
 
 }
 
-void NRCRemotePyro::getstate_impl(packetptr_t packetpr)
+void NRCRemotePyro::getstate_impl(packetptr_t packetptr)
 {
     updateContinuity();
-    static_cast<NRCRemoteBase<NRCRemotePyro>*>(this)->getstate_impl(std::move(packetptr));
+    NRCRemoteBase::getstate_impl(std::move(packetptr));
 }

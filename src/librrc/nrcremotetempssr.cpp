@@ -7,32 +7,29 @@
 void NRCRemoteTempSSR::setup(){
 
     pinMode(_gpio,OUTPUT);
+    digitalWrite(_gpio,LOW);
     
 }
 
 void NRCRemoteTempSSR::update(float sensor_temperature){
 
-    _sensor_temperature = sensor_temperature;    
+    if (!_state.flagSet(COMPONENT_STATUS_FLAGS::NOMINAL)){
+        digitalWrite(_gpio,LOW);
+        return;
+    }
     
-    execute_impl(packetptr_t packetptr);
+    if(sensor_temperature< _setpoint){
+        digitalWrite(_gpio,HIGH);
+    }else{
+         digitalWrite(_gpio,LOW);
+    }
+
 
 }
 
 void NRCRemoteTempSSR::execute_impl(packetptr_t packetptr)
 {
-    
     SimpleCommandPacket execute_command(*packetptr);
-
-    if(_sensor_temperature < static_cast<float>(execute_command.arg)){
-        digitalWrite(_gpio,HIGH);
-    }
-
-    if(_sensor_temperature > static_cast<float>(execute_command.arg)){
-        digitalWrite(_gpio,LOW);
-    }
-
-    if(execute_command.arg == 0){
-        digitalWrite(_gpio,LOW);
-    }
-
+    _setpoint = float(execute_command.arg); 
 }
+

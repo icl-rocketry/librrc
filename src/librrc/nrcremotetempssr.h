@@ -9,11 +9,10 @@ class NRCRemoteTempSSR : public NRCRemoteActuatorBase<NRCRemoteTempSSR>
 {
 
 public:
-    NRCRemoteSSR(RnpNetworkManager &networkmanager,
-                    uint8_t gpio
-                    ): 
+    NRCRemoteTempSSR(uint8_t gpio,RnpNetworkManager &networkmanager): 
         NRCRemoteActuatorBase(networkmanager),
-        _gpio(gpio)
+        _gpio(gpio),
+        _setpoint(0)
         {};
 
     void setup();
@@ -24,7 +23,11 @@ protected:
     friend class NRCRemoteActuatorBase;
 
     const uint8_t _gpio;
-    float _sensor_temperature;
+    float _setpoint;
+
 
     void execute_impl(packetptr_t packetptr);
+
+
+    
 };
