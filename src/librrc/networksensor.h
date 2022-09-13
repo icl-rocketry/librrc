@@ -21,7 +21,9 @@ class NetworkSensor:public RocketSensor{
         _sourceService(sourceService),
         _destinationService(destinationService),
         _networkmanager(networkmanager)
-        {};
+        {
+            // logcb("Sensor:" + std::to_string(id) + " constructed" + std::to_string(address));
+        };
 
         void updateState() override;
 

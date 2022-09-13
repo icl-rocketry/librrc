@@ -42,7 +42,9 @@ class NetworkActuator: public RocketActuator{
         _sourceService(sourceService),
         _destinationService(destinationService),
         _networkmanager(networkmanager)
-        {};
+        {
+            // logcb("Actuator:" + std::to_string(id) + " constructed" + std::to_string(address));
+        };
 
         void arm() override;
 
