@@ -22,6 +22,7 @@ public:
 
 protected:
     friend class NRCRemoteActuatorBase;
+    friend class NRCRemoteBase;
     const uint8_t _firePin;
     const uint8_t _contPin;
 

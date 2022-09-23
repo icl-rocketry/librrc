@@ -53,7 +53,7 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
 
     TaskData_t taskdata{_firePin,execute_command.arg};
 
-    if (async_off_task_handle != nullptr)
+    if ((async_off_task_handle != nullptr) && (eTaskGetState(async_off_task_handle) != eTaskState::eDeleted))
     {
         vTaskDelete(async_off_task_handle); // remove previous running task and replace with new task
     }
@@ -66,7 +66,7 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
 
                                 TickType_t xLastWakeTime = xTaskGetTickCount();
                                 vTaskDelayUntil(&xLastWakeTime, taskdata.param / portTICK_PERIOD_MS); // sleep for required amount
-                                pinMode(taskdata.firePin,LOW);
+                                digitalWrite(taskdata.firePin,LOW);
                                 vTaskDelete(NULL); // delete task 
                             },
                             "nukeofftask",
