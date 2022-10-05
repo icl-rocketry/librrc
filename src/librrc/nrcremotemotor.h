@@ -24,6 +24,13 @@ public:
 
     void setup();
 
+    /**
+     * @brief Made public so we can move the motor using buttons
+     * 
+     * @param speed 
+     */
+    void move_motor(uint32_t speed);
+
 
 protected:
 
@@ -35,6 +42,7 @@ protected:
     const uint8_t _channel2;
 
     void execute_impl(packetptr_t packetptr);
+    
 
     static constexpr int timer_width = 12;
     static constexpr int freq = 10000;

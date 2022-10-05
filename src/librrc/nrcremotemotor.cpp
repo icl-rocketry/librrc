@@ -15,20 +15,25 @@ void NRCRemoteMotor::setup(){
 
 }
 
+
 void NRCRemoteMotor::execute_impl(packetptr_t packetptr){
 
     SimpleCommandPacket execute_command(*packetptr);
-    _value = execute_command.arg; // update new position of actuator
+    move_motor(execute_command.arg);
+}
 
-    if(execute_command.arg < 0){    //reverse rotation
+void NRCRemoteMotor::move_motor(uint32_t speed)
+{
+    _value = speed; // update last position of actuator
+    if((speed > 100) && (speed <= 200)){    //reverse rotation
         ledcWrite(_channel1, 0);
-        ledcWrite(_channel2, LIBRRC::rangemap<uint32_t>(static_cast<uint32_t>(execute_command.arg), 0, 4095, 0, 100));
+        ledcWrite(_channel2, LIBRRC::rangemap<uint32_t>(static_cast<uint32_t>(execute_command.arg), 0, 4095, 100, 200));
     }
-    if(execute_command.arg > 0){    //forward rotation
+    if((speed > 0) && speed<= 100){    //forward rotation
         ledcWrite(_channel1, LIBRRC::rangemap<uint32_t>(static_cast<uint32_t>(execute_command.arg), 0, 4095, 0, 100));
         ledcWrite(_channel2, 0);
     }
-    if(execute_command.arg == 0){   //stop and freewheel
+    if(speed == 0){   //stop and freewheel
         ledcWrite(_channel1, 0);
         ledcWrite(_channel2, 0);
     }
