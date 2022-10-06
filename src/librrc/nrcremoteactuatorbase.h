@@ -67,6 +67,7 @@ protected:
      * @param packetptr 
      */
     void disarm_impl(packetptr_t packetptr){
+        this->_state.deleteFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
         this->_state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);
     };
 };
