@@ -41,6 +41,10 @@ public:
         { handlecommand(std::move(packetptr)); };
     };
 
+
+    const component_status_flags_t getStatus(){return _state.getStatus();};
+    const int32_t getValue(){return _value;};
+
 protected:
 
     RnpNetworkManager& _networkmanager;

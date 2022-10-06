@@ -20,15 +20,15 @@ bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateEx
 
     if (currentState->lastNewStateRequestTime >= currentState->lastNewStateUpdateTime) //component hasnt sent new update
     {
-        if (millis() - currentState->lastNewStateRequestTime > networkRetryInterval)
+        if (millis() - currentState->lastNewStateRequestTime > networkRetryInterval) //component timeout
         { //maybe packet got lost on the network? might indicate something more serious however
             this->_logcb(handler + " Component: " + std::to_string(cid) + " not responding!");
             //update state of component to no response error
             this->p_getState()->newFlag(COMPONENT_STATUS_FLAGS::ERROR_NORESPONSE);
             // try requesting an update again
             this->updateState(); 
+            return 1;
         }
-        return 1;
     }else if (millis()-currentState->lastNewStateRequestTime>stateExpiry)
     {
         //current state has expired, request new state update
@@ -51,3 +51,4 @@ bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateEx
 
     return 0;
 }
+
