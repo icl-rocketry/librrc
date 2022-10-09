@@ -13,5 +13,10 @@ class NRCRemoteSensorBase : public NRCRemoteBase<Derived>
         {
             this->_state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL); // initlaize sensor to nominal state
         };
-    
+
+    protected:
+        void updateSensorValue(float value)
+        {
+            _value = *reinterpret_cast<int32_t*>(&value); // convert float to int32_t bytes
+        }
 };
