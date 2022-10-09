@@ -17,6 +17,6 @@ class NRCRemoteSensorBase : public NRCRemoteBase<Derived>
     protected:
         void updateSensorValue(float value)
         {
-            _value = *reinterpret_cast<int32_t*>(&value); // convert float to int32_t bytes
+            this->_value = *reinterpret_cast<int32_t*>(&value); // convert float to int32_t bytes
         }
 };
