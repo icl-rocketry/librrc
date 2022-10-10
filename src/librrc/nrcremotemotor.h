@@ -44,8 +44,9 @@ protected:
     void execute_impl(packetptr_t packetptr);
     
 
-    static constexpr int timer_width = 12;
-    static constexpr int freq = 10000;
+    static constexpr int timer_width = 8;
+    static constexpr int freq = 30000;
+    static constexpr int max_duty = 255;
     
     
 };

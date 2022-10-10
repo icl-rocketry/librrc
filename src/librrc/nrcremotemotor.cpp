@@ -27,10 +27,10 @@ void NRCRemoteMotor::move_motor(uint32_t speed)
     _value = speed; // update last position of actuator
     if((speed > 100) && (speed <= 200)){    //reverse rotation
         ledcWrite(_channel1, 0);
-        ledcWrite(_channel2, LIBRRC::rangemap<uint32_t>(static_cast<uint32_t>(speed), 0, 4095, 100, 200));
+        ledcWrite(_channel2, LIBRRC::rangemap<uint32_t>(speed, 100, 200, 0, max_duty));
     }
     if((speed > 0) && speed<= 100){    //forward rotation
-        ledcWrite(_channel1, LIBRRC::rangemap<uint32_t>(static_cast<uint32_t>(speed), 0, 4095, 0, 100));
+        ledcWrite(_channel1, LIBRRC::rangemap<uint32_t>(speed, 0, 100, 0, max_duty));
         ledcWrite(_channel2, 0);
     }
     if(speed == 0){   //stop and freewheel
