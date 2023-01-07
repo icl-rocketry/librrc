@@ -22,10 +22,10 @@ enum class COMPONENT_STATUS_FLAGS:uint16_t{
     ERROR = (1<<6) //generic error
 };
 
-using component_status_flags_t = uint16_t;
+using component_status_flags_t = typename std::underlying_type<COMPONENT_STATUS_FLAGS>::type;
 // using system_flag_t = std::underlying_type<SYSTEM_FLAG>::type;
 
-struct RocketComponentState : public LIBRRC::BitwiseFlagManager<COMPONENT_STATUS_FLAGS,component_status_flags_t>
+struct RocketComponentState : public LIBRRC::BitwiseFlagManager<COMPONENT_STATUS_FLAGS>
 {
 
     uint32_t lastNewStateUpdateTime;

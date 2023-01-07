@@ -12,10 +12,10 @@
 #pragma once
 #include <type_traits>
 namespace LIBRRC{
-template<typename T,typename T_underlying = T>
+template<typename T,typename T_underlying = typename std::underlying_type<T>::type>
 class BitwiseFlagManager
 {
-    // using T_underlying = std::underlying_type<T>::type;
+   static_assert(std::is_integral_v<T_underlying>,"Underlying Type must be int castable");
 
 public:
     BitwiseFlagManager() : _statusString(static_cast<T_underlying>(0)){};
