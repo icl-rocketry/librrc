@@ -4,7 +4,7 @@
 #include "rocketcomponenttype.h"
 #include "rocketsensor.h"
 
-#include <rnp_networkmanager.h>
+#include <librnp/rnp_networkmanager.h>
 
 // #include "Storage/logController.h"
 #include "Helpers/rrclog.h"

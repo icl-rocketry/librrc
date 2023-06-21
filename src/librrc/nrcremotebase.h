@@ -19,9 +19,9 @@
 #include "rocketcomponent.h"
 
 #include "packets/nrcpackets.h"
-#include <default_packets/simplecommandpacket.h>
+#include <librnp/default_packets/simplecommandpacket.h>
 
-#include <rnp_networkmanager.h>
+#include <librnp/rnp_networkmanager.h>
 
 template<class Derived>
 class NRCRemoteBase

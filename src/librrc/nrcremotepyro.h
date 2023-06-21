@@ -2,9 +2,11 @@
 
 #include "nrcremoteactuatorbase.h"
 
-#include <rnp_networkmanager.h>
-#include <rnp_packet.h>
-#include <esp_task.h>
+#include <librnp/rnp_networkmanager.h>
+#include <librnp/rnp_packet.h>
+// #include <esp_task.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 #include <functional>
 

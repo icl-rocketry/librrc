@@ -4,8 +4,8 @@
 
 #include "networksensor.h"
 
-#include <rnp_networkmanager.h>
-#include <rnp_packet.h>
+#include <librnp/rnp_networkmanager.h>
+#include <librnp/rnp_packet.h>
 
 class NRCRemoteTempSSR : public NRCRemoteActuatorBase<NRCRemoteTempSSR>
 {

@@ -6,7 +6,7 @@
 
 #include "rocketactuator.h"
 
-#include <rnp_networkmanager.h>
+#include <librnp/rnp_networkmanager.h>
 
 #include "Helpers/rrclog.h"
 

@@ -1,9 +1,8 @@
 #pragma once
 #include "nrcremotebase.h"
-#include <rnp_networkmanager.h>
+#include <librnp/rnp_networkmanager.h>
 #include "rocketcomponent.h"
 
-#include <Arduino.h>
 
 template <typename Derived>
 class NRCRemoteActuatorBase : public NRCRemoteBase<Derived>

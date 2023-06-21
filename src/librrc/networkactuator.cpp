@@ -2,7 +2,7 @@
 
 
 #include "networkactuator.h"
-#include <default_packets/simplecommandpacket.h>
+#include <librnp/default_packets/simplecommandpacket.h>
 
 #include "packets/nrcpackets.h"
 

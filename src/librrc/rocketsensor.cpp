@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <rnp_networkmanager.h>
+#include <librnp/rnp_networkmanager.h>
 
 
 

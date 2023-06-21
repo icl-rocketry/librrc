@@ -3,7 +3,7 @@
 
 #include "esp32-hal-ledc.h"
 
-#include <Arduino.h>
+
 
 void NRCRemoteMotor::setup(){
 
