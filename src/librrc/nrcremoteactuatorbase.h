@@ -38,6 +38,11 @@ protected:
             static_cast<Derived *>(this)->disarm_impl(std::move(packetptr));
             break;
         }
+        case NRCPacket::NRC_COMMAND_ID::CALIBRATE:
+        {
+            static_cast<Derived *>(this)->calibrate_impl(std::move(packetptr));
+            break;
+        }
         default:
         {
             break;

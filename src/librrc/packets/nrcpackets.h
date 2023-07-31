@@ -18,7 +18,8 @@ namespace NRCPacket{
         GETSTATE=1,
         EXECUTE=2,
         ARM=3,
-        DISARM=4
+        DISARM=4,
+        CALIBRATE=5
     };
 
 };

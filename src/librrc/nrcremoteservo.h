@@ -4,6 +4,7 @@
 
 #include <librnp/rnp_networkmanager.h>
 #include <librnp/rnp_packet.h>
+#include <librrc/packets/servocalibrationpacket.h>
 
 #include <math.h>
 
@@ -65,9 +66,9 @@ public:
      * @param networkmanager RNP network manager object
      * @param default_angle Angle the servo will go to when setup is called
      * @param min_angle Minimum angle the servo can reach. Note that this is not the minimum angle 
-     * the servo will be restricted to, but the minimum angle the servo si capable of going to.
+     * the servo will be restricted to, but the minimum angle the servo is capable of going to.
      * @param max_angle Maximum angle the servo can reach. Note that this is not the maxmium angle 
-     * the servo will be restricted to, but the maximum angle the servo si capable of going to.
+     * the servo will be restricted to, but the maximum angle the servo is capable of going to.
      * @param min_uS Pulse width in microseconds corresponding to the minimum angle.
      * @param max_uS Pulse width in microseconds corresponding to the maximum angle.
      */
@@ -110,13 +111,21 @@ public:
     };
 
     void setHome(uint16_t homeangle){
+
         _default_angle = homeangle;
+        auto NVSName = "Srvo" + _channel;
+
+        pref.begin(NVSName, false);
+        pref.putUInt("home", homeangle);
+        pref.end();
     };
+
+    void goto_Angle(uint16_t angle);
    
 protected:
+
     friend class NRCRemoteActuatorBase;
-
-
+    Preferences pref;
 
     const uint8_t _gpio;
     const uint8_t _channel;
@@ -130,6 +139,7 @@ protected:
     uint16_t _angl_lim_max;
 
     void execute_impl(packetptr_t packetptr);
+    void calibrate_impl(packetptr_t packetptr);
 
     uint16_t angletocounts(uint16_t angle);
 

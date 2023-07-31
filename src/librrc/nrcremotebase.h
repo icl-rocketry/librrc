@@ -5,7 +5,7 @@
  * command processing for NRC type components. Uses CRTP to reduce runtime polymorphism overhead 
  * as it is not expected to cast to parent class ever. SHould be straightforward to change in 
  * the future or simply provide a runtime polymorphic derived class from this. Extended command handler 
- * implemented if a more complex componet is required.
+ * implemented if a more complex component is required.
  * @version 0.1
  * @date 2022-07-23
  * 
