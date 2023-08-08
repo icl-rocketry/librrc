@@ -7,6 +7,7 @@
 #include <librrc/packets/servocalibrationpacket.h>
 
 #include <math.h>
+#include <Preferences.h>
 
 typedef uint16_t counts_t;
 
@@ -43,7 +44,7 @@ public:
                     uint16_t angl_lim_min = 0,
                     uint16_t angl_lim_max = 360,
                     counts_t min_counts = counts(500),
-                    counts_t max_counts = counts(2400)
+                    counts_t max_counts = counts(2500)
                     ): 
     NRCRemoteActuatorBase(networkmanager),
         _gpio(gpio),
@@ -55,45 +56,6 @@ public:
         _angl_lim_max(angl_lim_max),
         _min_counts((uint16_t)min_counts),
         _max_counts((uint16_t)max_counts)
-        {};
-
-    /**
-     * @brief Using this constructor initialises the object using pulse width, i.e. the number
-     * in uS found on the servo datasheet.
-     * 
-     * @param gpio GPIO pin number the servo control wire is connected to
-     * @param channel PWM generator channel
-     * @param networkmanager RNP network manager object
-     * @param default_angle Angle the servo will go to when setup is called
-     * @param min_angle Minimum angle the servo can reach. Note that this is not the minimum angle 
-     * the servo will be restricted to, but the minimum angle the servo is capable of going to.
-     * @param max_angle Maximum angle the servo can reach. Note that this is not the maxmium angle 
-     * the servo will be restricted to, but the maximum angle the servo is capable of going to.
-     * @param min_uS Pulse width in microseconds corresponding to the minimum angle.
-     * @param max_uS Pulse width in microseconds corresponding to the maximum angle.
-     */
-    
-    NRCRemoteServo(uint8_t gpio,
-                    uint8_t channel,
-                    RnpNetworkManager &networkmanager,
-                    uint16_t default_angle = 0,
-                    uint16_t min_angle = 0,
-                    uint16_t max_angle = 180,
-                    uint16_t angl_lim_min = 0,
-                    uint16_t angl_lim_max = 360,
-                    uint16_t min_uS = 500,
-                    uint16_t max_uS = 2500
-                    ): 
-    NRCRemoteActuatorBase(networkmanager),
-        _gpio(gpio),
-        _channel(channel),
-        _default_angle(default_angle),
-        _min_angle(min_angle),
-        _max_angle(max_angle),
-        _angl_lim_min(angl_lim_min),
-        _angl_lim_max(angl_lim_max),
-        _min_counts(counts(min_uS)),
-        _max_counts(counts(max_uS))
         {};
 
     void setup();
@@ -132,18 +94,20 @@ protected:
     uint16_t _default_angle;
     const uint16_t _min_angle;
     const uint16_t _max_angle;
-    const uint16_t _min_counts;
-    const uint16_t _max_counts;
 
     uint16_t _angl_lim_min;
     uint16_t _angl_lim_max;
+
+    const uint16_t _min_counts;
+    const uint16_t _max_counts;
+
 
     void execute_impl(packetptr_t packetptr);
     void calibrate_impl(packetptr_t packetptr);
 
     uint16_t angletocounts(uint16_t angle);
 
-    static constexpr int timer_width = 16;
+    static constexpr int timer_width = 14;
     static constexpr int freq = 50;
     
     static constexpr int counts(int usec){

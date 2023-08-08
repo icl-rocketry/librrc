@@ -29,11 +29,11 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 
 void NRCRemoteServo::calibrate_impl(packetptr_t packetptr){
     
-    ServoCalibrationPacket calibrate_comm(*packetptr);
+    // ServoCalibrationPacket calibrate_comm(*packetptr);
 
-    setHome(calibrate_comm.home_angl);
+    // setHome(calibrate_comm.home_angl);
 
-    setAngleLims(calibrate_comm.min_angl, calibrate_comm.max_angl);
+    // setAngleLims(calibrate_comm.min_angl, calibrate_comm.max_angl);
 }
 
 void NRCRemoteServo::goto_Angle(uint16_t angle)
