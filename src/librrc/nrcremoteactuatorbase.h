@@ -74,4 +74,12 @@ protected:
         this->_state.deleteFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
         this->_state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);
     };
+
+    /**
+     * @brief Calibrate component. Does nothing by default
+     * 
+     * @param packetptr 
+     */
+    void calibrate_impl(packetptr_t packetptr){
+    };
 };

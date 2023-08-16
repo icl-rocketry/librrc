@@ -17,7 +17,17 @@ void NRCRemotePyro::setup()
 
 void NRCRemotePyro::arm_impl(packetptr_t packetptr)
 {
-    updateContinuity();
+    SimpleCommandPacket armingpacket(*packetptr);
+
+    if(armingpacket.arg != 1){
+        _contcheck = true;
+        updateContinuity();
+    }
+    else{
+        _contcheck = false;
+        updateContinuity();
+    }
+
     NRCRemoteActuatorBase::arm_impl(std::move(packetptr));
 }
 
@@ -29,16 +39,26 @@ void NRCRemotePyro::updateContinuity()
         {
             _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
         }
-
     }
     else
     {
-        if (!_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY)){
-            _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+        if (_contcheck == false)
+        {
+            if (_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+            {
+                _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+            }
+        }
+        else
+        {
+
+            if (!_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+            {
+                _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+            }
         }
     }
 }
-
 
 void NRCRemotePyro::execute_impl(packetptr_t packetptr)
 {
