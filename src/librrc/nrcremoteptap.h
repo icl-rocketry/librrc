@@ -19,32 +19,11 @@ class NRCRemotePTap : public NRCRemoteSensorBase<Derived>
 
         NRCRemotePTap(RnpNetworkManager& networkmanager,
                     ADS1219 &ADS,
-                    uint8_t adc_channel,
-                    uint32_t grad = 1,
-                    uint32_t c = 0,
-                    uint32_t resistance = 1
+                    uint8_t adc_channel
                     ) : 
             NRCRemoteSensorBase(networkmanager),
             _ADS(ADS),
-            _adc_channel(adc_channel),
-            _grad(grad),
-            _c(c),
-            _resistance(resistance)
-        {};
-
-
-        NRCRemotePTap(RnpNetworkManager& networkmanager,
-                    ADS1219 &ADS,
-                    uint8_t adc_channel,
-                    uint32_t grad,
-                    uint32_t c,
-                    ) : 
-            NRCRemoteSensorBase(networkmanager),
-            _ADS(ADS),
-            _adc_channel(adc_channel),
-            _grad(grad),
-            _c(c),
-            _resistance(0)
+            _adc_channel(adc_channel)
         {};
 
         uint32_t getValue();
@@ -54,9 +33,10 @@ class NRCRemotePTap : public NRCRemoteSensorBase<Derived>
         friend class NRCRemoteSensorBase;
         ADS1219 &_ADS;
         uint8_t _adc_channel;
-        float _c;
-        float _grad;
-        float _resistance;
+        float _c = 0;
+        float _grad = 1;
+        float _resistance = 1;
 
+        void calibrate(float c, float grad, float resistance);
         void calibrate_impl(packetptr_t packetptr);     
 };
