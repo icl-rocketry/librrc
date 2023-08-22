@@ -37,9 +37,9 @@ class PTapCalibrationPacket : public RnpPacket{
          */
         void serialize(std::vector<uint8_t>& buf) override;
 
-        uint32_t grad;
-        uint32_t c;
-        uint32_t resistance;
+        float grad;
+        float c;
+        float resistance;
 
         static constexpr size_t size(){
             return getSerializer().member_size();
