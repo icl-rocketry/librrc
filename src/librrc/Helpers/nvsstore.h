@@ -1,0 +1,126 @@
+#pragma once
+
+#include <Preferences.h>
+#include <librnp/rnp_packet.h>
+#include <functional>
+#include <vector>
+#include <string>
+#include <memory>
+
+class NVSStore
+{
+public:
+
+    enum class serviceType : uint8_t
+    {
+        LoadCell = 0,
+        CurrentPT = 1,
+        VoltagePT = 2,
+        Thermistor = 3,
+        Thermocouple = 4,
+        Servo = 5
+    };
+    
+    NVSStore(std::string NVSName, NVSStore::serviceType calibrationType):
+    _NVSName(NVSName.data()),
+    _calibtype(calibrationType)
+    {};
+
+    void saveBytes(std::vector<uint8_t> Bytes)
+    {
+        _NVS.begin(_NVSName);
+
+        uint16_t calibLen = Bytes.size() * sizeof(uint8_t);
+
+        nvsPut("Type", (uint8_t) _calibtype);
+        _NVS.putBytes("SerialConsts", Bytes.data(), calibLen);
+        nvsPut("Checksum", genCRCremainder(Bytes, 0b00001, 0));
+
+        _NVS.end();
+    };
+
+    std::vector<uint8_t> loadBytes()
+    {
+        _NVS.begin(_NVSName, true);
+
+        if(_NVS.getUShort("Type") != (uint8_t) _calibtype){
+            //throw an error here but haven't implemented that yet
+            return;
+        }
+
+        uint8_t vectlen = _NVS.getBytesLength("SerialConsts");
+        std::vector<uint8_t> bytesVector(vectlen);
+        
+        _NVS.getBytes("SerialConsts",   bytesVector.data(), vectlen);
+        _NVS.end();
+
+        return bytesVector;
+    };
+
+    void erase();
+
+private:
+    Preferences _NVS;
+    char *_NVSName;
+
+    // var stores the serivce type to calibrate for
+    serviceType _calibtype;
+
+    
+    /**
+    * @brief method to generate a CRC checksum. Look at https://en.wikipedia.org/wiki/Cyclic_redundancy_check for more info.
+    * 
+    * @param datavect Vector of data to use for checksum generation.
+    * @param CRCpoly  Generator polynomial to use. Note that this since this is defined as uint32, this method can at most implement CRC-31
+    * @param fillervar The filler variable to use as the initial remainder which is added to the end of the data. This should be either 1 or 0.
+    * 
+    * @return This method will return the CRC remainder, which is also the checksum.
+    */
+
+    uint32_t genCRCremainder(std::vector<uint8_t> datavect, uint32_t CRCpoly, bool fillervar){
+        uint32_t poly = CRCpoly;
+
+
+        uint32_t remainder;
+        return remainder;
+    };
+
+    bool checkCRC();
+    
+    // overloads depending on type of the value
+    void nvsPut(std::string valKey, float value)
+    {
+        char *key = valKey.data();
+        _NVS.putFloat(key, value);
+    }
+
+    void nvsPut(std::string valKey, int value)
+    {
+        char *key = valKey.data();
+        _NVS.putInt(key, value);
+    }
+
+    void nvsPut(std::string valKey, unsigned int value)
+    {
+        char *key = valKey.data();
+        _NVS.putUInt(key, value);
+    }
+
+    void nvsPut(std::string valKey, bool value)
+    {
+        char *key = valKey.data();
+        _NVS.putBool(key, value);
+    }
+
+    void nvsPut(std::string valKey, short value)
+    {
+        char *key = valKey.data();
+        _NVS.putShort(key, value);
+    }
+
+    void nvsPut(std::string valKey, unsigned short value)
+    {
+        char *key = valKey.data();
+        _NVS.putUShort(key, value);
+    }
+};
