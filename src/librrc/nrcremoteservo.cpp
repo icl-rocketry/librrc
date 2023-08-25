@@ -6,17 +6,36 @@
 #include <Arduino.h>
 #include <Preferences.h>
 
+#include "packets/servocalibrationpacket.h"
+#include "Helpers/nvsstore.h"
+
 void NRCRemoteServo::setup(){
 
     ledcSetup(_channel,freq,timer_width);
     ledcAttachPin(_gpio,_channel);
-    auto NVSName = "Srvo" + _channel;
-    pref.begin(NVSName, true);
-    _default_angle = (uint16_t) pref.getUInt("home");
-    pref.end();
-    
+
+    loadCalibration();
     reset(); // send servo to default position
     
+}
+
+void NRCRemoteServo::loadCalibration(){
+    
+    std::string NVSName = "Srvo" + std::to_string(_channel);
+    NVSStore _NVS(NVSName, NVSStore::calibrationType::Servo);
+    
+
+    std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
+    
+    if(calibSerialised.size() == 0){
+        return;
+    }
+    ServoCalibrationPacket calibpacket;
+    calibpacket.deserializeBody(calibSerialised);
+
+    setHome(calibpacket.home_angl);
+    setAngleLims(calibpacket.min_angl, calibpacket.max_angl);
+
 }
 
 void NRCRemoteServo::execute_impl(packetptr_t packetptr)
@@ -29,11 +48,20 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 
 void NRCRemoteServo::calibrate_impl(packetptr_t packetptr){
     
-    // ServoCalibrationPacket calibrate_comm(*packetptr);
+    Serial.println("Calibrate called");
 
-    // setHome(calibrate_comm.home_angl);
+    ServoCalibrationPacket calibrate_comm(*packetptr);
 
-    // setAngleLims(calibrate_comm.min_angl, calibrate_comm.max_angl);
+    std::vector<uint8_t> serialisedvect = packetptr->getBody();
+
+    std::string NVSName = "Srvo" + std::to_string(_channel);
+    NVSStore _NVS(NVSName, NVSStore::calibrationType::Servo);
+    
+    _NVS.saveBytes(serialisedvect);
+    
+    setHome(calibrate_comm.home_angl);
+
+    setAngleLims(calibrate_comm.min_angl, calibrate_comm.max_angl);
 }
 
 void NRCRemoteServo::goto_Angle(uint16_t angle)

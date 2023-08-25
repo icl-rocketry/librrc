@@ -37,6 +37,8 @@ class ServoCalibrationPacket : public RnpPacket{
          */
         void serialize(std::vector<uint8_t>& buf) override;
 
+        void deserializeBody(std::vector<uint8_t>& buf);
+        
         uint16_t home_angl;
         uint16_t min_angl;
         uint16_t max_angl;

@@ -73,21 +73,18 @@ public:
     };
 
     void setHome(uint16_t homeangle){
-
         _default_angle = homeangle;
-        auto NVSName = "Srvo" + _channel;
-
-        pref.begin(NVSName, false);
-        pref.putUInt("home", homeangle);
-        pref.end();
     };
 
     void goto_Angle(uint16_t angle);
+
+    uint16_t getHome(){return _default_angle;};
+    uint16_t getMin(){return _angl_lim_min;};
+    uint16_t getMax(){return _angl_lim_max;};
    
 protected:
 
     friend class NRCRemoteActuatorBase;
-    Preferences pref;
 
     const uint8_t _gpio;
     const uint8_t _channel;
@@ -101,7 +98,8 @@ protected:
     const uint16_t _min_counts;
     const uint16_t _max_counts;
 
-
+    void loadCalibration();
+    
     void execute_impl(packetptr_t packetptr);
     void calibrate_impl(packetptr_t packetptr);
 

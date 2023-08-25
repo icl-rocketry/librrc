@@ -11,7 +11,7 @@ class NVSStore
 {
 public:
 
-    enum class serviceType : uint8_t
+    enum class calibrationType : uint8_t
     {
         LoadCell = 0,
         CurrentPT = 1,
@@ -21,31 +21,32 @@ public:
         Servo = 5
     };
     
-    NVSStore(std::string NVSName, NVSStore::serviceType calibrationType):
-    _NVSName(NVSName.data()),
+    NVSStore(std::string NVSName, NVSStore::calibrationType calibrationType):
+    _NVSName(NVSName),
     _calibtype(calibrationType)
     {};
 
     void saveBytes(std::vector<uint8_t> Bytes)
     {
-        _NVS.begin(_NVSName);
+        _NVS.begin(_NVSName.c_str());
 
         uint16_t calibLen = Bytes.size() * sizeof(uint8_t);
 
         nvsPut("Type", (uint8_t) _calibtype);
         _NVS.putBytes("SerialConsts", Bytes.data(), calibLen);
-        nvsPut("Checksum", genCRCremainder(Bytes, 0b00001, 0));
+        //nvsPut("Checksum", genCRCremainder(Bytes, 0b00001, 0));
 
         _NVS.end();
     };
 
     std::vector<uint8_t> loadBytes()
     {
-        _NVS.begin(_NVSName, true);
+        _NVS.begin(_NVSName.c_str(), true);
 
-        if(_NVS.getUShort("Type") != (uint8_t) _calibtype){
+        if(_NVS.getUShort("Type", 200) != (uint8_t) _calibtype){
             //throw an error here but haven't implemented that yet
-            return;
+           std::vector<uint8_t>emptyvect(0);
+           return emptyvect;
         }
 
         uint8_t vectlen = _NVS.getBytesLength("SerialConsts");
@@ -61,10 +62,10 @@ public:
 
 private:
     Preferences _NVS;
-    char *_NVSName;
+    std::string _NVSName;
 
     // var stores the serivce type to calibrate for
-    serviceType _calibtype;
+    calibrationType _calibtype;
 
     
     /**
@@ -77,13 +78,13 @@ private:
     * @return This method will return the CRC remainder, which is also the checksum.
     */
 
-    uint32_t genCRCremainder(std::vector<uint8_t> datavect, uint32_t CRCpoly, bool fillervar){
-        uint32_t poly = CRCpoly;
+    // uint32_t genCRCremainder(std::vector<uint8_t> datavect, uint32_t CRCpoly, bool fillervar){
+    //     uint32_t poly = CRCpoly;
 
 
-        uint32_t remainder;
-        return remainder;
-    };
+    //     uint32_t remainder;
+    //     return remainder;
+    // };
 
     bool checkCRC();
     

@@ -80,6 +80,5 @@ protected:
      * 
      * @param packetptr 
      */
-    void calibrate_impl(packetptr_t packetptr){
-    };
+    virtual void calibrate_impl(packetptr_t packetptr){};
 };
