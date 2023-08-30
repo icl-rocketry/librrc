@@ -32,7 +32,8 @@ public:
 
         uint16_t calibLen = Bytes.size() * sizeof(uint8_t);
 
-        nvsPut("Type", (uint8_t) _calibtype);
+        _NVS.putUChar("Type",(uint8_t) _calibtype);
+
         _NVS.putBytes("SerialConsts", Bytes.data(), calibLen);
         //nvsPut("Checksum", genCRCremainder(Bytes, 0b00001, 0));
 
@@ -43,7 +44,7 @@ public:
     {
         _NVS.begin(_NVSName.c_str(), true);
 
-        if(_NVS.getUShort("Type", 200) != (uint8_t) _calibtype){
+        if(_NVS.getUChar("Type", 200) != (uint8_t) _calibtype){
             //throw an error here but haven't implemented that yet
            std::vector<uint8_t>emptyvect(0);
            return emptyvect;
@@ -52,7 +53,7 @@ public:
         uint8_t vectlen = _NVS.getBytesLength("SerialConsts");
         std::vector<uint8_t> bytesVector(vectlen);
         
-        _NVS.getBytes("SerialConsts",   bytesVector.data(), vectlen);
+        _NVS.getBytes("SerialConsts", bytesVector.data(), vectlen);
         _NVS.end();
 
         return bytesVector;

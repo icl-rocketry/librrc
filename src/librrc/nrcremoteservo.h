@@ -6,6 +6,8 @@
 #include <librnp/rnp_packet.h>
 #include <librrc/packets/servocalibrationpacket.h>
 
+#include <libriccore/riccorelogging.h>
+
 #include <math.h>
 #include <Preferences.h>
 

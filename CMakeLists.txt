@@ -9,7 +9,8 @@ if (ESP_PLATFORM)
     add_subdirectory(src) 
     #we need to explictly link t
     target_link_libraries(librrc PRIVATE idf::arduino) 
-    target_link_libraries(librrc PRIVATE idf::librnp) 
+    target_link_libraries(librrc PRIVATE idf::librnp)
+    target_link_libraries(librrc PRIVATE idf::libriccore) 
     # target_link_libraries(librrc PRIVATE idf::esp_task) 
     #link the orignal cmake librnp library to the component library 
     target_link_libraries(${COMPONENT_LIB} INTERFACE librrc)

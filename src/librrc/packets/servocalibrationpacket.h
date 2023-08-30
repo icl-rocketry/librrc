@@ -11,9 +11,10 @@ class ServoCalibrationPacket : public RnpPacket{
         static constexpr auto getSerializer()
         {
             auto ret = RnpSerializer(
-                &ServoCalibrationPacket::home_angl,
+                &ServoCalibrationPacket::command,
                 &ServoCalibrationPacket::min_angl,
-                &ServoCalibrationPacket::max_angl
+                &ServoCalibrationPacket::max_angl,
+                &ServoCalibrationPacket::home_angl
             );
 
             return ret;
@@ -39,9 +40,10 @@ class ServoCalibrationPacket : public RnpPacket{
 
         void deserializeBody(std::vector<uint8_t>& buf);
         
-        uint16_t home_angl;
+        uint8_t command;
         uint16_t min_angl;
         uint16_t max_angl;
+        uint16_t home_angl;
 
         static constexpr size_t size(){
             return getSerializer().member_size();

@@ -48,7 +48,7 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 
 void NRCRemoteServo::calibrate_impl(packetptr_t packetptr){
     
-    Serial.println("Calibrate called");
+    RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Servo calibration called");
 
     ServoCalibrationPacket calibrate_comm(*packetptr);
 
