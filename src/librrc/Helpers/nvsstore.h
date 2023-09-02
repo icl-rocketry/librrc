@@ -14,11 +14,10 @@ public:
     enum class calibrationType : uint8_t
     {
         LoadCell = 0,
-        CurrentPT = 1,
-        VoltagePT = 2,
-        Thermistor = 3,
-        Thermocouple = 4,
-        Servo = 5
+        PT = 1,
+        Thermistor = 2,
+        Thermocouple = 3,
+        Servo = 4
     };
     
     NVSStore(std::string NVSName, NVSStore::calibrationType calibrationType):

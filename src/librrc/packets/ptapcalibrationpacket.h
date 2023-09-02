@@ -36,6 +36,7 @@ class PTapCalibrationPacket : public RnpPacket{
          * @param buf 
          */
         void serialize(std::vector<uint8_t>& buf) override;
+        void deserializeBody(std::vector<uint8_t>& buf);
 
         float grad;
         float c;

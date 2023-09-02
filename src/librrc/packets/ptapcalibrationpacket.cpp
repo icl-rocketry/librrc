@@ -22,6 +22,10 @@ RnpPacket(packet,size())
     getSerializer().deserialize(*this,packet.getBody());
 };
 
+void PTapCalibrationPacket::deserializeBody(std::vector<uint8_t>& buf){
+    getSerializer().deserialize(*this, buf);
+};
+
 void PTapCalibrationPacket::serialize(std::vector<uint8_t>& buf){
     RnpPacket::serialize(buf);
 	size_t bufsize = buf.size();
