@@ -11,9 +11,9 @@ class PTapCalibrationPacket : public RnpPacket{
         static constexpr auto getSerializer()
         {
             auto ret = RnpSerializer(
+                &PTapCalibrationPacket::command,
                 &PTapCalibrationPacket::grad,
-                &PTapCalibrationPacket::c,
-                &PTapCalibrationPacket::resistance
+                &PTapCalibrationPacket::c
             );
 
             return ret;
@@ -29,7 +29,8 @@ class PTapCalibrationPacket : public RnpPacket{
          * @param data 
          */
         PTapCalibrationPacket(const RnpPacketSerialized& packet);
-
+        
+        void deserializeBody(std::vector<uint8_t>& buf);
         /**
          * @brief Serialize Packet
          * 
@@ -38,9 +39,9 @@ class PTapCalibrationPacket : public RnpPacket{
         void serialize(std::vector<uint8_t>& buf) override;
         void deserializeBody(std::vector<uint8_t>& buf);
 
-        float grad;
+        uint8_t command;
         float c;
-        float resistance;
+        float grad;
 
         static constexpr size_t size(){
             return getSerializer().member_size();

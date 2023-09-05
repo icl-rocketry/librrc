@@ -48,8 +48,6 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 
 void NRCRemoteServo::calibrate_impl(packetptr_t packetptr){
     
-    RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Servo calibration called");
-
     ServoCalibrationPacket calibrate_comm(*packetptr);
 
     std::vector<uint8_t> serialisedvect = packetptr->getBody();

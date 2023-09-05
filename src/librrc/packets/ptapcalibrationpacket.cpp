@@ -12,7 +12,7 @@ PTapCalibrationPacket::~PTapCalibrationPacket()
 
 PTapCalibrationPacket::PTapCalibrationPacket():
 RnpPacket(0,
-          105,
+          106,
           size())
 {};
 

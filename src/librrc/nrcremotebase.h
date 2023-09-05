@@ -53,7 +53,7 @@ protected:
 
     void handlecommand(packetptr_t packetptr){
         //check packet is a command packet
-        if (packetptr->header.type == static_cast<uint8_t>(NRCPacket::TYPES::NRC_COMMAND)){
+        // if (packetptr->header.type == static_cast<uint8_t>(NRCPacket::TYPES::NRC_COMMAND)){
             
             const NRCPacket::NRC_COMMAND_ID commandID = static_cast<NRCPacket::NRC_COMMAND_ID>(CommandPacket::getCommand(*packetptr));
            
@@ -63,6 +63,11 @@ protected:
                     static_cast<Derived*>(this)->getstate_impl(std::move(packetptr));
                     break;
                 }
+                case NRCPacket::NRC_COMMAND_ID::CALIBRATE:
+                {
+                    static_cast<Derived *>(this)->calibrate_impl(std::move(packetptr));
+                    break;
+                }
                 default:
                 {
                     static_cast<Derived*>(this)->extendedCommandHandler_impl(commandID,std::move(packetptr));
@@ -70,7 +75,7 @@ protected:
                 }
             }
 
-        }
+        // }
     }
     //default implementations - can be overriden by function hiding as this is crtp
     /**
@@ -87,10 +92,15 @@ protected:
         getstate_response.value = _value;
         _networkmanager.sendPacket(getstate_response);
 
-        
-
     };
-   
+    
+    /**
+     * @brief Calibrate component. Does nothing by default
+     *
+     * @param packetptr
+     */
+    virtual void calibrate_impl(packetptr_t packetptr){};
+
     void extendedCommandHandler_impl(const NRCPacket::NRC_COMMAND_ID commandID,packetptr_t packetptr){};
      
 };

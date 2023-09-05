@@ -16,7 +16,7 @@ public:
 protected:
     friend class NRCRemoteBase<Derived>;
 
-    void extendedCommandHandler_impl(const NRCPacket::NRC_COMMAND_ID commandID,packetptr_t packetptr)
+    void extendedCommandHandler_impl(const NRCPacket::NRC_COMMAND_ID commandID, packetptr_t packetptr)
     {
         switch (commandID)
         {
@@ -38,11 +38,6 @@ protected:
             static_cast<Derived *>(this)->disarm_impl(std::move(packetptr));
             break;
         }
-        case NRCPacket::NRC_COMMAND_ID::CALIBRATE:
-        {
-            static_cast<Derived *>(this)->calibrate_impl(std::move(packetptr));
-            break;
-        }
         default:
         {
             break;
@@ -61,7 +56,6 @@ protected:
         if (this->_state.getStatus() == static_cast<uint16_t>(COMPONENT_STATUS_FLAGS::DISARMED)){
             this->_state.deleteFlag(COMPONENT_STATUS_FLAGS::DISARMED);
             this->_state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
-
         }
         
     };
@@ -74,11 +68,4 @@ protected:
         this->_state.deleteFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
         this->_state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);
     };
-
-    /**
-     * @brief Calibrate component. Does nothing by default
-     * 
-     * @param packetptr 
-     */
-    virtual void calibrate_impl(packetptr_t packetptr){};
 };
