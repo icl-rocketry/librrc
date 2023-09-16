@@ -1,4 +1,4 @@
-#include "SensorPoller.h"
+#include "sensorpoller.h"
 #include <Arduino.h>
 
 void SensorPoller::setup()

@@ -5,30 +5,30 @@
 
 #include <vector>
 
-class PTapCalibrationPacket : public RnpPacket{
+class LoadCellCalibrationPacket : public RnpPacket{
     private:
     //serializer framework
         static constexpr auto getSerializer()
         {
             auto ret = RnpSerializer(
-                &PTapCalibrationPacket::command,
-                &PTapCalibrationPacket::c,
-                &PTapCalibrationPacket::grad
+                &LoadCellCalibrationPacket::command,
+                &LoadCellCalibrationPacket::c,
+                &LoadCellCalibrationPacket::grad
             );
 
             return ret;
         }
         
     public:
-        ~PTapCalibrationPacket();
+        ~LoadCellCalibrationPacket();
 
-        PTapCalibrationPacket();
+        LoadCellCalibrationPacket();
         /**
          * @brief Deserialize Packet
          * 
          * @param data 
          */
-        PTapCalibrationPacket(const RnpPacketSerialized& packet);
+        LoadCellCalibrationPacket(const RnpPacketSerialized& packet);
         
         void deserializeBody(std::vector<uint8_t>& buf);
         /**
