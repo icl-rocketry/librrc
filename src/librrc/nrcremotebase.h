@@ -99,7 +99,7 @@ protected:
      *
      * @param packetptr
      */
-    virtual void calibrate_impl(packetptr_t packetptr){};
+    void calibrate_impl(packetptr_t packetptr){};
 
     void extendedCommandHandler_impl(const NRCPacket::NRC_COMMAND_ID commandID,packetptr_t packetptr){};
      

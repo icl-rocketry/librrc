@@ -87,6 +87,7 @@ public:
 protected:
 
     friend class NRCRemoteActuatorBase;
+    friend class NRCRemoteBase;
 
     const uint8_t _gpio;
     const uint8_t _channel;
