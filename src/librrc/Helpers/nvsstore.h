@@ -14,7 +14,7 @@ public:
     enum class calibrationType : uint8_t
     {
         LoadCell = 0,
-        PT = 1,
+        PTap = 1,
         Thermistor = 2,
         Thermocouple = 3,
         Servo = 4

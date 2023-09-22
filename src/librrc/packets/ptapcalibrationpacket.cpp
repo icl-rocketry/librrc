@@ -1,4 +1,4 @@
-#include "PTapCalibrationPacket.h"
+#include "ptapcalibrationpacket.h"
 
 #include <librnp/rnp_networkmanager.h>
 #include <librnp/rnp_packet.h>
