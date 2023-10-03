@@ -55,21 +55,6 @@ void NRCRemotePyro::updateContinuity()
         {
             _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
         }
-        // if (_contcheck == false)
-        // {
-        //     if (_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
-        //     {
-        //         _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
-        //     }
-        // }
-        // else
-        // {
-
-        //     if (!_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
-        //     {
-        //         _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
-        //     }
-        // }
     }
 }
 
