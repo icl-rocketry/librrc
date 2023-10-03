@@ -27,7 +27,7 @@ protected:
     friend class NRCRemoteBase;
     const uint8_t _firePin;
     const uint8_t _contPin;
-    bool _contcheck;
+    bool _contCheckOverride;
 
     TaskHandle_t async_off_task_handle = nullptr;
 

@@ -20,15 +20,23 @@ void NRCRemotePyro::arm_impl(packetptr_t packetptr)
     SimpleCommandPacket armingpacket(*packetptr);
 
     if(armingpacket.arg != 1){
-        _contcheck = true;
-        updateContinuity();
+        _contCheckOverride = false;
     }
     else{
-        _contcheck = false;
-        updateContinuity();
+        _contCheckOverride = true;  
     }
 
-    NRCRemoteActuatorBase::arm_impl(std::move(packetptr));
+    updateContinuity();
+    // NRCRemoteActuatorBase::arm_impl(std::move(packetptr));
+
+    if (_state.getStatus() == static_cast<uint16_t>(COMPONENT_STATUS_FLAGS::DISARMED) || 
+        (_state.flagSetAnd(COMPONENT_STATUS_FLAGS::DISARMED,COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY) && _contCheckOverride))
+        {
+            _state.deleteFlag(COMPONENT_STATUS_FLAGS::DISARMED);
+            _state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
+        }
+
+
 }
 
 void NRCRemotePyro::updateContinuity()
@@ -42,21 +50,26 @@ void NRCRemotePyro::updateContinuity()
     }
     else
     {
-        if (_contcheck == false)
+        
+    if (!_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
         {
-            if (_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
-            {
-                _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
-            }
+            _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
         }
-        else
-        {
+        // if (_contcheck == false)
+        // {
+        //     if (_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+        //     {
+        //         _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+        //     }
+        // }
+        // else
+        // {
 
-            if (!_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
-            {
-                _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
-            }
-        }
+        //     if (!_state.flagSet(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+        //     {
+        //         _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+        //     }
+        // }
     }
 }
 
