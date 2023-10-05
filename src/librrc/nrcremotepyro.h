@@ -9,6 +9,7 @@
 #include <freertos/task.h>
 
 #include <functional>
+#include <atomic>
 
 class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
 {
@@ -28,6 +29,7 @@ protected:
     const uint8_t _firePin;
     const uint8_t _contPin;
     bool _contCheckOverride;
+    std::atomic<bool> _taskDeleted = false;
 
     TaskHandle_t async_off_task_handle = nullptr;
 

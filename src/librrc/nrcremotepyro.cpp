@@ -2,6 +2,7 @@
 #include <esp_task.h>
 #include <functional>
 #include <Arduino.h>
+#include <atomic>
 
 
 
@@ -67,14 +68,19 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
     struct TaskData_t{
         uint8_t firePin;
         uint32_t param;
+        std::atomic<bool> &taskDeleted;
     };
 
-    TaskData_t taskdata{_firePin,execute_command.arg};
+    TaskData_t taskdata{_firePin,execute_command.arg,_taskDeleted};
 
     if ((async_off_task_handle != nullptr) && (eTaskGetState(async_off_task_handle) != eTaskState::eDeleted))
     {
-        vTaskDelete(async_off_task_handle); // remove previous running task and replace with new task
+        if (!_taskDeleted){
+            vTaskDelete(async_off_task_handle); // remove previous running task and replace with new task
+        }
+        async_off_task_handle = nullptr;
     }
+    
 
     // spawn task to switch off pin given timeout param wiht higher prioirty so sleeping starts immediatley and non static task data is copied immediatley
     xTaskCreatePinnedToCore([](void *pvParameters)
@@ -85,6 +91,7 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
                                 TickType_t xLastWakeTime = xTaskGetTickCount();
                                 vTaskDelayUntil(&xLastWakeTime, taskdata.param / portTICK_PERIOD_MS); // sleep for required amount
                                 digitalWrite(taskdata.firePin,LOW);
+                                taskdata.taskDeleted = true;
                                 vTaskDelete(NULL); // delete task 
                             },
                             "nukeofftask",
@@ -93,7 +100,8 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
                             2,
                             &async_off_task_handle,
                             1);
-
+    _taskDeleted = false;
+    vTaskDelay(1);
 
 }
 
