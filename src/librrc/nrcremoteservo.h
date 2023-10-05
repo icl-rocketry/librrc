@@ -77,6 +77,7 @@ public:
     };
 
     void goto_Angle(uint16_t angle);
+    void goto_AngleHighRes(float angle);
 
     uint16_t getHome(){return _default_angle;};
     uint16_t getMin(){return _angl_lim_min;};
@@ -85,7 +86,6 @@ public:
 protected:
 
     friend class NRCRemoteActuatorBase;
-    friend class NRCRemoteBase;
 
     const uint8_t _gpio;
     const uint8_t _channel;
@@ -105,6 +105,7 @@ protected:
     void calibrate_impl(packetptr_t packetptr);
 
     uint16_t angletocounts(uint16_t angle);
+    float angletocountsHighRes(float angle);
 
     static constexpr int timer_width = 14;
     static constexpr int freq = 50;

@@ -88,6 +88,32 @@ uint16_t NRCRemoteServo::angletocounts(uint16_t angle)
     return LIBRRC::rangemap<uint16_t>(angle,_min_angle,_max_angle,_min_counts,_max_counts); 
 }
 
+void NRCRemoteServo::goto_AngleHighRes(float angle)
+{
+    /*Check if angle value is outside of angle limits. Would also have added checking for the min_angle and max_angle but 
+    rangemap function already has checking for that so there's no point. */
+
+    if (angle > _angl_lim_max)
+    {
+        _value = _angl_lim_max;
+    }
+    else if (angle < _angl_lim_min)
+    {
+        _value = _angl_lim_min;
+    }
+    else
+    {
+        _value = angle; // update new position of actuator
+    }
+
+    ledcWrite(_channel, angletocountsHighRes(angle));
+}
+
+float NRCRemoteServo::angletocountsHighRes(float angle)
+{
+    return LIBRRC::rangemap<float>(angle,_min_angle,_max_angle,_min_counts,_max_counts); 
+}
+
 void NRCRemoteServo::reset()
 {
     goto_Angle(_default_angle);

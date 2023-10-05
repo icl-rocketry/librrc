@@ -12,8 +12,8 @@ class PTapCalibrationPacket : public RnpPacket{
         {
             auto ret = RnpSerializer(
                 &PTapCalibrationPacket::command,
-                &PTapCalibrationPacket::grad,
-                &PTapCalibrationPacket::c
+                &PTapCalibrationPacket::c,
+                &PTapCalibrationPacket::grad
             );
 
             return ret;
