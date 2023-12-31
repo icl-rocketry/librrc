@@ -60,6 +60,7 @@ class RocketComponent{
          */
         const RocketComponentState* getState(){return p_getState();};
         virtual void updateState() = 0;
+        //TODO: change netRetryInterval to pollInterval so its more agnostic between networked vs non-networked
         virtual bool flightCheck(uint32_t netRetryInterval,uint32_t stateExpiry,std::string handler);
         virtual ~RocketComponent() = 0;
 

@@ -4,7 +4,22 @@
 #include <Arduino.h>
 #include <atomic>
 
+NRCRemotePyro::NRCRemotePyro(uint8_t firePin,uint8_t contPin,RnpNetworkManager &networkmanager) : 
+    NRCRemoteActuatorBase(networkmanager),
+    _firePin(firePin),
+    _contPin(contPin),
+    offTimeUpdated(false)
+    {};
 
+
+NRCRemotePyro::~NRCRemotePyro()
+{
+    if ((offTaskHandle != nullptr) && (eTaskGetState(offTaskHandle) != eTaskState::eDeleted))
+    {
+        vTaskDelete(offTaskHandle); //I beg this doesnt crash
+        offTaskHandle = nullptr;
+    }
+}
 
 void NRCRemotePyro::setup()
 {
@@ -13,6 +28,11 @@ void NRCRemotePyro::setup()
     pinMode(_contPin,INPUT);
     _state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);
     updateContinuity();
+
+    if (!spawnOffTask())
+    {
+        _state.flagSet(COMPONENT_STATUS_FLAGS::ERROR);
+    }
 }
 
 
@@ -62,46 +82,28 @@ void NRCRemotePyro::updateContinuity()
 void NRCRemotePyro::execute_impl(packetptr_t packetptr)
 {
     SimpleCommandPacket execute_command(*packetptr);
+    //update task data
+    offTime = execute_command.arg;
+    offTimeUpdated = true;
+    eTaskState offTaskState = eTaskGetState(offTaskHandle);
 
-    digitalWrite(_firePin,HIGH);
-
-    struct TaskData_t{
-        uint8_t firePin;
-        uint32_t param;
-        std::atomic<bool> &taskDeleted;
-    };
-
-    TaskData_t taskdata{_firePin,execute_command.arg,_taskDeleted};
-
-    if ((async_off_task_handle != nullptr) && (eTaskGetState(async_off_task_handle) != eTaskState::eDeleted))
+    if (offTaskState == eTaskState::eBlocked)
     {
-        if (!_taskDeleted){
-            vTaskDelete(async_off_task_handle); // remove previous running task and replace with new task
-        }
-        async_off_task_handle = nullptr;
+        //abort any delay if the task is blocked
+        xTaskAbortDelay(offTaskHandle);
+    }
+    else if (offTaskState == eTaskState::eSuspended)
+    {
+        //unsuspend off task
+        vTaskResume(offTaskHandle);
+    }
+    else if ((offTaskState != eTaskState::eReady) || (offTaskState != eTaskState::eRunning))
+    {
+        _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR);
     }
     
+    
 
-    // spawn task to switch off pin given timeout param wiht higher prioirty so sleeping starts immediatley and non static task data is copied immediatley
-    xTaskCreatePinnedToCore([](void *pvParameters)
-                            {
-                                // create local copy of data as task data is not static
-                                TaskData_t taskdata = *reinterpret_cast<TaskData_t *>(pvParameters);
-
-                                TickType_t xLastWakeTime = xTaskGetTickCount();
-                                vTaskDelayUntil(&xLastWakeTime, taskdata.param / portTICK_PERIOD_MS); // sleep for required amount
-                                digitalWrite(taskdata.firePin,LOW);
-                                taskdata.taskDeleted = true;
-                                vTaskDelete(NULL); // delete task 
-                            },
-                            "nukeofftask",
-                            1000,
-                            (void *)&taskdata,
-                            2,
-                            &async_off_task_handle,
-                            1);
-    _taskDeleted = false;
-    vTaskDelay(1);
 
 }
 
@@ -109,4 +111,57 @@ void NRCRemotePyro::getstate_impl(packetptr_t packetptr)
 {
     updateContinuity();
     NRCRemoteBase::getstate_impl(std::move(packetptr));
+}
+
+bool NRCRemotePyro::spawnOffTask()
+{
+    // spawn off Task
+    struct TaskData_t
+    {
+        uint8_t firePin;
+        std::atomic<uint32_t> &offTime;
+        std::atomic<bool> &offTimeUpdated;
+    };
+
+    TaskData_t taskdata{_firePin, offTime, offTimeUpdated};
+
+    // spawn task to switch off pin given timeout param
+    // spawn with higher priority than calling thread so that the scoped taskdata is copied before it goes out of scope. (this feels fragile???)
+    offTaskHandle = xTaskCreateStaticPinnedToCore([](void *pvParameters)
+                                                  {
+                                                      // create local copy of data as task data is not static
+                                                      TaskData_t taskdata = *reinterpret_cast<TaskData_t *>(pvParameters);
+                                                      vTaskSuspend(NULL); // suspend task waiting for first
+                                                      for (;;)
+                                                      {
+                                                          digitalWrite(taskdata.firePin, HIGH);
+                                                          taskdata.offTimeUpdated = false;
+                                                          vTaskDelay(taskdata.offTime / portTICK_PERIOD_MS); // sleep for required amount
+                                                          // check if offTime has been updated while we were asleep
+                                                          if (taskdata.offTimeUpdated)
+                                                          {
+                                                              continue; // skip switching off the pyro and continue sleeping with new offTime
+                                                          }
+
+                                                          digitalWrite(taskdata.firePin, LOW);
+                                                          // suspend off task when timeout is finished
+                                                          vTaskSuspend(NULL);
+                                                      }
+                                                      // vTaskDelete(NULL); // delete task
+                                                  },
+                                                  "nukeofftask", 
+                                                  offTaskStackSize, 
+                                                  (void *)&taskdata, 
+                                                  2, 
+                                                  taskStack.data(), 
+                                                  &offTaskTCB, 
+                                                  1);
+    
+    vTaskDelay(1); // make sure the offTask is spawned -> i dont think this is necessary but i had it here before so oh well
+
+    if (offTaskHandle == nullptr)
+    {
+        return false;
+    }
+    return true;
 }
