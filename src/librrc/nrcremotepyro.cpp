@@ -102,7 +102,6 @@ void NRCRemotePyro::execute_impl(packetptr_t packetptr)
         _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR);
     }
     
-    
 
 
 }
@@ -162,6 +161,7 @@ bool NRCRemotePyro::spawnOffTask()
     if (offTaskHandle == nullptr)
     {
         return false;
+        Serial.println("Kiran messed up task stack allocation, get stack highwater mark and make fun of him");
     }
     return true;
 }
