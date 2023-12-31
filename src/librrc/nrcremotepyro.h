@@ -67,6 +67,6 @@ protected:
 
     void updateContinuity();
 
-    bool spawnOffTask()
+    bool spawnOffTask();
 
 };
