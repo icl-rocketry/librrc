@@ -55,7 +55,7 @@ class NetworkActuator: public RocketActuator{
          *              e.g if the actuator is a pyro, this will set the on time in ms whereas if this is a servo, it will be the
          *              angular position of the servo.
          */
-        void execute(int32_t param) override;
+        void execute(uint32_t param) override;
 
         void updateState() override;
 
