@@ -1,7 +1,7 @@
 #pragma once
 #include "nrcremotebase.h"
 #include <librnp/rnp_networkmanager.h>
-#include "rocketcomponent.h"
+#include <librrc/componentstatusflags.h>
 
 
 template <typename Derived>
@@ -10,7 +10,7 @@ class NRCRemoteActuatorBase : public NRCRemoteBase<Derived>
 public:
     NRCRemoteActuatorBase(RnpNetworkManager &networkmanager) : NRCRemoteBase<Derived>(networkmanager)
     {
-        this->_state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);//initalize disarmed
+        this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);//initalize disarmed
     };
 
 protected:
@@ -22,7 +22,7 @@ protected:
         {
         case NRCPacket::NRC_COMMAND_ID::EXECUTE:
         {
-            if (this->_state.flagSet(COMPONENT_STATUS_FLAGS::NOMINAL))
+            if (this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
             {
                 static_cast<Derived *>(this)->execute_impl(std::move(packetptr));
             }
@@ -53,9 +53,9 @@ protected:
     void arm_impl(packetptr_t packetptr){
         // check for any other errors, only arm if we are error free
 
-        if (this->_state.getStatus() == static_cast<uint16_t>(COMPONENT_STATUS_FLAGS::DISARMED)){
-            this->_state.deleteFlag(COMPONENT_STATUS_FLAGS::DISARMED);
-            this->_state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
+        if (this->_state.getStatus() == static_cast<uint16_t>(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED)){
+            this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
+            this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
         }
         
     };
@@ -65,7 +65,7 @@ protected:
      * @param packetptr 
      */
     void disarm_impl(packetptr_t packetptr){
-        this->_state.deleteFlag(COMPONENT_STATUS_FLAGS::NOMINAL);
-        this->_state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);
+        this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
+        this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
     };
 };

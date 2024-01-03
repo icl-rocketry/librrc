@@ -11,7 +11,7 @@
 
 #include <librnp/rnp_networkcallbackmap.h>
 
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
 
 
 template<class Object,class Derived>

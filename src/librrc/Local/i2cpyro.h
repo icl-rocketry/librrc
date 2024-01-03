@@ -9,10 +9,10 @@
  * @copyright Copyright (c) 2022
  * 
  */
-#include "rocketactuator.h"
-#include "rocketcomponenttype.h"
+#include <librrc/Interface/rocketactuator.h>
+#include <librrc/Interface/rocketcomponenttype.h>   
 
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
 
 #include <Wire.h>
 

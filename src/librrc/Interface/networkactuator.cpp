@@ -4,7 +4,8 @@
 #include "networkactuator.h"
 #include <librnp/default_packets/simplecommandpacket.h>
 
-#include "packets/nrcpackets.h"
+#include <librrc/Packets/nrcpackets.h>
+#include <librrc/componentstatusflags.h>
 
 
 

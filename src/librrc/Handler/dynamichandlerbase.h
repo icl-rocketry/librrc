@@ -5,8 +5,7 @@
 #include <memory>
 #include <utility>
 
-// #include "Storage/logController.h"
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
 
 /**
  * @brief Templated dynamic handler which manages objects of type T 

@@ -1,6 +1,8 @@
 #include "nrcremotetempssr.h"
-#include "rocketsensor.h"
-#include "networksensor.h"
+
+#include <librrc/Interface/rocketsensor.h>
+#include <librrc/Interface/networksensor.h>
+#include <librrc/componentstatusflags.h>
 
 #include <Arduino.h>
 
@@ -57,13 +59,13 @@ void NRCRemoteTempSSR::update()
 
     // catch any other case
     digitalWrite(_gpio, LOW);
-    _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR);
+    _state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR);
 }
 
 void NRCRemoteTempSSR::update(float sensor_temperature){
 
     //ensures that if this component is diarmed or encounters an error, the SSR is disabled
-    if (!_state.flagSet(COMPONENT_STATUS_FLAGS::NOMINAL)){ 
+    if (!_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL)){ 
         digitalWrite(_gpio,LOW);
         return;
     }

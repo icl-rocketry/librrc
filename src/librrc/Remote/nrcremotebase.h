@@ -16,12 +16,13 @@
 
 #include <functional>
 
-#include "rocketcomponent.h"
+#include <librrc/componentstatusflags.h>
+#include <librrc/Helpers/bitwiseflagmanager.h>
+#include <librrc/Packets/nrcpackets.h>
 
-#include "packets/nrcpackets.h"
 #include <librnp/default_packets/simplecommandpacket.h>
-
 #include <librnp/rnp_networkmanager.h>
+
 
 template<class Derived>
 class NRCRemoteBase
@@ -42,13 +43,13 @@ public:
     };
 
 
-    const component_status_flags_t getStatus(){return _state.getStatus();};
-    const int32_t getValue(){return _value;};
+    LIBRRC::component_status_flags_t getStatus() const {return _state.getStatus();};
+    int32_t getValue() const {return _value;};
 
 protected:
 
     RnpNetworkManager& _networkmanager;
-    LIBRRC::BitwiseFlagManager<COMPONENT_STATUS_FLAGS,component_status_flags_t> _state;
+    LIBRRC::BitwiseFlagManager<LIBRRC::COMPONENT_STATUS_FLAGS,LIBRRC::component_status_flags_t> _state;
     int32_t _value;
 
     void handlecommand(packetptr_t packetptr){

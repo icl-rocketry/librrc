@@ -13,7 +13,7 @@
 
 #include <librnp/rnp_networkmanager.h>
 
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
 
 
 /**

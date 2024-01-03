@@ -4,7 +4,7 @@
 
 #include <librnp/rnp_networkmanager.h>
 #include <librnp/rnp_packet.h>
-#include <librrc/packets/servocalibrationpacket.h>
+#include <librrc/Packets/servocalibrationpacket.h>
 
 #include <math.h>
 #include <Preferences.h>

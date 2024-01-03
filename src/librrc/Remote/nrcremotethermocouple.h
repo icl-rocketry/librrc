@@ -5,9 +5,8 @@
 #include <librnp/rnp_networkmanager.h>
 #include <librnp/rnp_packet.h>
 
-#ifdef HAVE_MAX31856
-#include "MAX31856.h"
-#endif
+
+#if __has__include("MAX31856.h") 
 
 template <typename Derived>
 
@@ -29,3 +28,6 @@ class NRCRemoteThermocouple : public NRCRemoteSensorBase<Derived>
         MAX31856 &_MAX;
         
 };
+
+#endif
+

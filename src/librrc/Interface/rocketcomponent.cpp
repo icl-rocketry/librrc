@@ -1,4 +1,5 @@
 #include "rocketcomponent.h"
+#include <librrc/componentstatusflags.h>
 
 #include <string>
 #include <Arduino.h>
@@ -24,7 +25,7 @@ bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateEx
         { //maybe packet got lost on the network? might indicate something more serious however
             this->_logcb(handler + " Component: " + std::to_string(cid) + " not responding!");
             //update state of component to no response error
-            this->p_getState()->newFlag(COMPONENT_STATUS_FLAGS::ERROR_NORESPONSE);
+            this->p_getState()->newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_NORESPONSE);
             // try requesting an update again
             this->updateState(); 
             return 1;
@@ -36,7 +37,7 @@ bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateEx
         this->updateState();
     }
     
-    if (!this->p_getState()->flagSet(COMPONENT_STATUS_FLAGS::NOMINAL))
+    if (!this->p_getState()->flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
     {
         //check if the component state has changedf
         if (currentState->getStatus() != currentState->previousStatus)

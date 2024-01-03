@@ -2,7 +2,7 @@
 
 #include "nrcremotebase.h"
 #include <librnp/rnp_networkmanager.h>
-#include "rocketcomponent.h"
+#include <librrc/componentstatusflags.h>
 
 template <typename Derived>
 

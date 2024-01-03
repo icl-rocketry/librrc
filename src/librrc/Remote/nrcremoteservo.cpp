@@ -1,13 +1,13 @@
 #include "nrcremoteservo.h"
-#include "Helpers/rangemap.h"
+#include <librrc/Helpers/rangemap.h>
 
 #include "esp32-hal-ledc.h"
 
 #include <Arduino.h>
 #include <Preferences.h>
 
-#include "packets/servocalibrationpacket.h"
-#include "Helpers/nvsstore.h"
+#include <librrc/Packets/servocalibrationpacket.h>
+#include <librrc/Helpers/nvsstore.h>
 
 void NRCRemoteServo::setup(){
 

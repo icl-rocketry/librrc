@@ -6,8 +6,9 @@
 
 #include <librnp/rnp_networkmanager.h>
 
-// #include "Storage/logController.h"
-#include "Helpers/rrclog.h"
+
+#include <librrc/Helpers/rrclog.h>
+
 struct NetworkSensorState: public RocketSensorState{
     //no extra members currently
 };

@@ -1,13 +1,12 @@
 #include "i2cpyro.h"
 
-#include "rocketactuator.h"
-#include "rocketcomponenttype.h"
+#include <librrc/Interface/rocketactuator.h>
+#include <librrc/Interface/rocketcomponenttype.h>   
 
-// #include "Storage/logController.h"
-#include "Helpers/rrclog.h"
+
+#include <librrc/Helpers/rrclog.h>
 
 #include <esp_task.h>
-
 
 #include <functional>
 
@@ -24,10 +23,10 @@ _continuityPolarity(continuityPolarity),
 _wire(wire)
 {
     if (!pinsValid){
-        _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_PINS);
+        _state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_PINS);
         return;
     }
-    _state.newFlag(COMPONENT_STATUS_FLAGS::DISARMED);
+    _state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
     // get port configuration
     uint8_t config = get_register(CONFIG);
     //update config
@@ -66,10 +65,10 @@ _wire(wire)
 
 void I2CPyro::arm(){
     //verify the only flag triggered is the unarmed flag
-    if (_state.getStatus() == static_cast<uint16_t>(COMPONENT_STATUS_FLAGS::DISARMED))
+    if (_state.getStatus() == static_cast<uint16_t>(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED))
     {
-        _state.deleteFlag(COMPONENT_STATUS_FLAGS::DISARMED);
-        _state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL); // arm this shit
+        _state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
+        _state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL); // arm this shit
     }else{
         _logcb("Pyro: " + std::to_string(_id) + " arming failed due to errors: " + std::to_string(_state.getStatus()));
     }
@@ -81,7 +80,7 @@ void I2CPyro::execute(int32_t param)
         _logcb("Pyro: " + std::to_string(_id) + " pins invalid");
         return;
     }
-    if (_state.flagSet(COMPONENT_STATUS_FLAGS::DISARMED))
+    if (_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED))
     {
         _logcb("Pyro: " + std::to_string(_id) + " tried firing while disarmed!");
         return;
@@ -152,10 +151,10 @@ void I2CPyro::updateState()
     _state.currentValue = get_register(INPUT_PORT) & ( 1 << _continuityPin);
     if (_state.currentValue == 0)
     {
-        _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+        _state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
     }else
     {
-        _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+        _state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
     }
 };
 
@@ -168,10 +167,10 @@ uint8_t I2CPyro::get_register(uint8_t reg)
 
     _wire.requestFrom(_address,1);
     if (_wire.available()){
-        _state.deleteFlag(COMPONENT_STATUS_FLAGS::ERROR_I2C);
+        _state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_I2C);
         return _wire.read();
     }else{
-        _state.newFlag(COMPONENT_STATUS_FLAGS::ERROR_I2C);
+        _state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_I2C);
         return 0;
     }
 };

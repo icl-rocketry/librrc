@@ -8,7 +8,8 @@
 
 #include <librnp/rnp_networkmanager.h>
 
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
+#include <librrc/componentstatusflags.h>
 
 struct NetworkActuatorState : public RocketActuatorState{
     //cant think of any other members required here currently

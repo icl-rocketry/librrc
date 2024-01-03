@@ -2,7 +2,7 @@
 
 #include "nrcremoteactuatorbase.h"
 
-#include "networksensor.h"
+#include <librrc/Interface/networksensor.h>
 
 #include <librnp/rnp_networkmanager.h>
 #include <librnp/rnp_packet.h>

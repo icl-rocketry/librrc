@@ -2,7 +2,8 @@
 
 #include "rocketcomponent.h"
 
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
+
 #include <memory>
 
 

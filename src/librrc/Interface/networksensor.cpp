@@ -1,9 +1,8 @@
 #include "networksensor.h"
-#include "packets/nrcpackets.h"
+#include <librrc/Packets/nrcpackets.h>
 #include <librnp/default_packets/simplecommandpacket.h>
 #include <Arduino.h> // needed for millis
 
-// #include "Storage/logController.h"
 
 NetworkSensor::~NetworkSensor(){};
 

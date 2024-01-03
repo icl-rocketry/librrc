@@ -5,7 +5,7 @@
 #include <memory>
 
 // 
-#include "Helpers/rrclog.h"
+#include <librrc/Helpers/rrclog.h>
 
 struct RocketActuatorState:public RocketComponentState{
     int32_t currentValue;

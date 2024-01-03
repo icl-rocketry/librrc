@@ -1,5 +1,5 @@
 #include "nrcremotemotor.h"
-#include "Helpers/rangemap.h"
+#include <librrc/Helpers/rangemap.h>
 
 #include "esp32-hal-ledc.h"
 
