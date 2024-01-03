@@ -95,7 +95,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
          * @brief Atomic off time for task
          *
          */
-        std::atomic<uint32_t> offTime;
+        std::atomic<int32_t> offTime;
         std::atomic<bool> offTimeUpdated;
 
     protected: //Methods
@@ -104,7 +104,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
         {
 
         };
-        void execute(uint32_t arg)
+        void execute(int32_t arg)
         {
 
         };
@@ -158,6 +158,11 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
         void execute_impl(packetptr_t packetptr)
         {
             SimpleCommandPacket execute_command(*packetptr);
+
+            if (execute_command.arg < 0)
+            {
+                return;
+            }
             // update task data
             offTime = execute_command.arg;
             offTimeUpdated = true;
@@ -191,9 +196,9 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
             struct TaskData_t
             {
                 GPIOHAL firePin;
-                std::atomic<uint32_t> &offTime;
+                std::atomic<int32_t> &offTime;
                 std::atomic<bool> &offTimeUpdated;
-            };
+            }; 
 
             TaskData_t taskdata{m_firePin, offTime, offTimeUpdated};
 

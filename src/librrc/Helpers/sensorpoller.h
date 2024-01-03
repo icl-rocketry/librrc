@@ -1,6 +1,6 @@
 #pragma once
-#include <Arduino.h>
-#include "networksensor.h"
+#include <stdint.h>
+#include <librrc/Interface/networksensor.h>
 
 class SensorPoller
 {

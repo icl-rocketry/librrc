@@ -10,9 +10,6 @@ RocketComponent::~RocketComponent(){};
 bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateExpiry,std::string handler){
     const RocketComponentState* currentState = this->getState();
     if (currentState == nullptr){
-        #ifdef _RICDEBUG
-        throw std::runtime_error("flightCheck() called on base class instance without a derived class!");
-        #endif
         this->_logcb("flightCheck() called on base class instance without a derived class!");
         return 1; 
     }

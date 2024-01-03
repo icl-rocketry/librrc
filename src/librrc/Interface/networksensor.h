@@ -34,7 +34,7 @@ class NetworkSensor:public RocketSensor{
          * 
          * @param packetptr 
          */
-        void networkCallback(packetptr_t packetptr);
+        virtual void networkCallback(packetptr_t packetptr);
 
         ~NetworkSensor();
 

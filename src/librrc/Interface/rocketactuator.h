@@ -19,7 +19,7 @@ class RocketActuator: public RocketComponent{
 
         virtual void arm() = 0;
 
-        virtual void execute(uint32_t param) = 0;
+        virtual void execute(int32_t param) = 0;
 
         virtual ~RocketActuator() = 0;
 

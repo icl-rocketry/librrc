@@ -42,6 +42,10 @@ void NRCRemoteServo::execute_impl(packetptr_t packetptr)
 {
 
     SimpleCommandPacket execute_command(*packetptr);
+    if (execute_command.arg < 0)
+    {
+        return;
+    }
 
     goto_Angle(execute_command.arg);
 }

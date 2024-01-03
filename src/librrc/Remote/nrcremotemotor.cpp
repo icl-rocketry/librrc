@@ -22,7 +22,7 @@ void NRCRemoteMotor::execute_impl(packetptr_t packetptr){
     move_motor(execute_command.arg);
 }
 
-void NRCRemoteMotor::move_motor(uint32_t speed)
+void NRCRemoteMotor::move_motor(int32_t speed)
 {
     _value = speed; // update last position of actuator
     if((speed > 100) && (speed <= 200)){    //reverse rotation

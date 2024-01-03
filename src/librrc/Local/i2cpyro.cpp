@@ -96,7 +96,7 @@ void I2CPyro::execute(int32_t param)
     struct TaskData_t{
         const uint8_t address;
         const uint8_t nukePin;
-        const int32_t param;
+        const uint32_t param;
         TwoWire& wire;
     };
 

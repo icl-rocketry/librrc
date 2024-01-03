@@ -11,10 +11,10 @@
 
 
 
-void NetworkActuator::execute(uint32_t param){
+void NetworkActuator::execute(int32_t param){
     
 
-    SimpleCommandPacket execute_packet(static_cast<uint8_t>(NRCPacket::NRC_COMMAND_ID::EXECUTE),static_cast<uint32_t>(param)); 
+    SimpleCommandPacket execute_packet(static_cast<uint8_t>(NRCPacket::NRC_COMMAND_ID::EXECUTE),param); 
     execute_packet.header.type = static_cast<uint8_t>(NRCPacket::TYPES::NRC_COMMAND);
     execute_packet.header.source = _networkmanager.getAddress();
     execute_packet.header.source_service = _sourceService;

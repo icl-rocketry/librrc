@@ -29,7 +29,7 @@ public:
      * 
      * @param speed 
      */
-    void move_motor(uint32_t speed);
+    void move_motor(int32_t speed);
 
 
 protected:
