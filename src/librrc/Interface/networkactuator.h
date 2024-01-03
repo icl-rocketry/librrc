@@ -38,7 +38,7 @@ class NetworkActuator: public RocketActuator{
          * @param networkmanager reference to the network manager
          */
         NetworkActuator(uint8_t id,uint8_t address,uint8_t sourceService,uint8_t destinationService,RnpNetworkManager& networkmanager,LIBRRC::RRCLog::LogCallback_t logcb):
-        RocketActuator(id,RocketComponentTypes::TYPES::NET_ACTUATOR,logcb),
+        RocketActuator(id,logcb),
         _address(address),
         _sourceService(sourceService),
         _destinationService(destinationService),

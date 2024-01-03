@@ -49,7 +49,7 @@ public:
 protected:
 
     RnpNetworkManager& _networkmanager;
-    LIBRRC::BitwiseFlagManager<LIBRRC::COMPONENT_STATUS_FLAGS,LIBRRC::component_status_flags_t> _state;
+    LIBRRC::BitwiseFlagManager<LIBRRC::COMPONENT_STATUS_FLAGS> _state;
     int32_t _value;
 
     void handlecommand(packetptr_t packetptr){
@@ -92,7 +92,6 @@ protected:
         getstate_response.state = _state.getStatus();
         getstate_response.value = _value;
         _networkmanager.sendPacket(getstate_response);
-
     };
     
     /**
@@ -100,7 +99,7 @@ protected:
      *
      * @param packetptr
      */
-    void calibrate_impl(packetptr_t packetptr){};
+    void calibrate_impl(packetptr_t packetptr){};-
 
     void extendedCommandHandler_impl(const NRCPacket::NRC_COMMAND_ID commandID,packetptr_t packetptr){};
      

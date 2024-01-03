@@ -13,8 +13,8 @@ struct RocketActuatorState:public RocketComponentState{
 
 class RocketActuator: public RocketComponent{
     public:
-        RocketActuator(uint8_t id,RocketComponentTypes::TYPES componentType,LIBRRC::RRCLog::LogCallback_t logcb):
-        RocketComponent(id,componentType,logcb)
+        RocketActuator(uint8_t id,LIBRRC::RRCLog::LogCallback_t logcb):
+        RocketComponent(id,logcb)
         {};
 
         virtual void arm() = 0;

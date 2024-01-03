@@ -33,9 +33,8 @@ struct RocketComponentState : public LIBRRC::BitwiseFlagManager<LIBRRC::COMPONEN
 
 class RocketComponent{
     public:
-        RocketComponent(uint8_t id,RocketComponentTypes::TYPES componentType,LIBRRC::RRCLog::LogCallback_t logcb):
+        RocketComponent(uint8_t id,LIBRRC::RRCLog::LogCallback_t logcb):
         _id(id),
-        _componentType(componentType),
         _logcb(logcb)
         {};
         
@@ -47,8 +46,17 @@ class RocketComponent{
          */
         const RocketComponentState* getState(){return p_getState();};
         virtual void updateState() = 0;
-        //TODO: change netRetryInterval to pollInterval so its more agnostic between networked vs non-networked
-        virtual bool flightCheck(uint32_t netRetryInterval,uint32_t stateExpiry,std::string handler);
+       
+        /**
+         * @brief 
+         * 
+         * @param timeout 
+         * @param stateExpiry 
+         * @param handler 
+         * @return true 
+         * @return false 
+         */
+        virtual bool flightCheck(uint32_t timeout,uint32_t stateExpiry,std::string handler);
         virtual ~RocketComponent() = 0;
 
         uint8_t getID(){return _id;};
@@ -56,7 +64,6 @@ class RocketComponent{
 
     protected:
         const uint8_t _id;
-        const RocketComponentTypes::TYPES _componentType;
 
         /**
          * @brief Returns a non const pointer to the component state allowing parent class

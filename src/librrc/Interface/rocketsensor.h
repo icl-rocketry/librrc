@@ -13,8 +13,8 @@ struct RocketSensorState:public RocketComponentState{
  //stoopid empty class ...
 class RocketSensor:public RocketComponent{
     public:
-        RocketSensor(uint8_t id,RocketComponentTypes::TYPES componentType,LIBRRC::RRCLog::LogCallback_t logcb):
-        RocketComponent(id,componentType,logcb)
+        RocketSensor(uint8_t id,LIBRRC::RRCLog::LogCallback_t logcb):
+        RocketComponent(id,logcb)
         {};
 
         virtual ~RocketSensor() = 0;

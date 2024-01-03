@@ -7,7 +7,7 @@
 RocketComponent::~RocketComponent(){};
 
 //Returns true if there is an error !!
-bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateExpiry,std::string handler){
+bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::string handler){
     const RocketComponentState* currentState = this->getState();
     if (currentState == nullptr){
         this->_logcb("flightCheck() called on base class instance without a derived class!");
@@ -16,27 +16,27 @@ bool RocketComponent::flightCheck(uint32_t networkRetryInterval,uint32_t stateEx
 
     const uint8_t cid = this->getID();
 
-    if (currentState->lastNewStateRequestTime >= currentState->lastNewStateUpdateTime) //component hasnt sent new update
+    if (currentState->lastNewStateRequestTime > currentState->lastNewStateUpdateTime) //component hasnt sent new update
     {
-        if (millis() - currentState->lastNewStateRequestTime > networkRetryInterval) //component timeout
+        if (millis() - currentState->lastNewStateRequestTime > timeout) //component timeout
         { //maybe packet got lost on the network? might indicate something more serious however
-            this->_logcb(handler + " Component: " + std::to_string(cid) + " not responding!");
+            this->_logcb(handler + " Component: " + std::to_string(cid) + " timeout!");
             //update state of component to no response error
-            this->p_getState()->newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_NORESPONSE);
             // try requesting an update again
             this->updateState(); 
             return 1;
         }
-    }else if (millis()-currentState->lastNewStateRequestTime>stateExpiry)
+    }
+    else if (millis()-currentState->lastNewStateRequestTime>stateExpiry)
     {
         //current state has expired, request new state update
-       
+    
         this->updateState();
     }
     
-    if (!this->p_getState()->flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
+    if (!currentState->flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
     {
-        //check if the component state has changedf
+        //check if the component state has changed to prevent spamming of log messages
         if (currentState->getStatus() != currentState->previousStatus)
         {
             //log the changes
