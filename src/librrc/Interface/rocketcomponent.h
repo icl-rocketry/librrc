@@ -12,26 +12,11 @@
 #include "rocketcomponenttype.h"
 
 
-struct RocketComponentState : public LIBRRC::BitwiseFlagManager<LIBRRC::COMPONENT_STATUS_FLAGS>
-{
-
-    uint32_t lastNewStateUpdateTime;
-    uint32_t lastNewStateRequestTime;
-    LIBRRC::component_status_flags_t previousStatus; // used to track changes in state
-
-    /**
-     * @brief Allows tracking of the state of remote components such as
-     * networked components
-     * 
-     * @param remoteState 
-     */
-    void trackRemoteStatus(uint16_t remoteState)
-    {
-        _statusString = remoteState;
-    }
-};
-
 class RocketComponent{
+    public:
+        //type aliases
+        using RocketComponentState = LIBRRC::BitwiseFlagManager<LIBRRC::COMPONENT_STATUS_FLAGS>;
+
     public:
         RocketComponent(uint8_t id,LIBRRC::RRCLog::LogCallback_t logcb):
         _id(id),
@@ -39,12 +24,17 @@ class RocketComponent{
         {};
         
         /**
-         * @brief Returns a const pointer to the component state for external objects to 
+         * @brief Returns a const reference to the component state for external objects to 
          * get the last received state of the component.
          * 
-         * @return const RocketComponentState* 
+         * @return const RocketComponentState& 
          */
-        const RocketComponentState* getState(){return p_getState();};
+        const RocketComponentState& getState() const {return getState();};
+        uint32_t getLastStateUpdateTime() {return lastStateUpdateTime;};
+        uint32_t getLastStateRequestTime() { return lastStateRequestTime;};
+
+
+
         virtual void updateState() = 0;
        
         /**
@@ -60,7 +50,6 @@ class RocketComponent{
         virtual ~RocketComponent() = 0;
 
         uint8_t getID(){return _id;};
-        RocketComponentTypes::TYPES getComponentType(){return _componentType;};
 
     protected:
         const uint8_t _id;
@@ -71,7 +60,12 @@ class RocketComponent{
          * 
          * @return RocketComponentState* 
          */
-        virtual RocketComponentState* p_getState() = 0;
+        // virtual RocketComponentState* p_getState() = 0;
+
+        virtual RocketComponentState& getState() = 0;
+        LIBRRC::component_status_flags_t previousStatus;
+        uint32_t lastStateUpdateTime;
+        uint32_t lastStateRequestTime;
 
 
         LIBRRC::RRCLog::LogCallback_t _logcb;

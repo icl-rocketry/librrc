@@ -100,7 +100,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
 
     protected: //Methods
 
-        void arm(uint32_t arg)
+        void arm(int32_t arg)
         {
 
         };
@@ -108,7 +108,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro>
         {
 
         };
-        void disarm(uint32_t arg)
+        void disarm()
         {
 
         };

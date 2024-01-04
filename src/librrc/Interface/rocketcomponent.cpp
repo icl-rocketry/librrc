@@ -8,17 +8,12 @@ RocketComponent::~RocketComponent(){};
 
 //Returns true if there is an error !!
 bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::string handler){
-    const RocketComponentState* currentState = this->getState();
-    if (currentState == nullptr){
-        this->_logcb("flightCheck() called on base class instance without a derived class!");
-        return 1; 
-    }
-
+    const RocketComponentState& currentState = this->getState();
     const uint8_t cid = this->getID();
 
-    if (currentState->lastNewStateRequestTime > currentState->lastNewStateUpdateTime) //component hasnt sent new update
+    if (lastStateRequestTime > lastStateUpdateTime) //component hasnt sent new update
     {
-        if (millis() - currentState->lastNewStateRequestTime > timeout) //component timeout
+        if (millis() - lastStateRequestTime > timeout) //component timeout
         { //maybe packet got lost on the network? might indicate something more serious however
             this->_logcb(handler + " Component: " + std::to_string(cid) + " timeout!");
             //update state of component to no response error
@@ -27,22 +22,22 @@ bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::str
             return 1;
         }
     }
-    else if (millis()-currentState->lastNewStateRequestTime>stateExpiry)
+    else if (millis()-lastStateRequestTime > stateExpiry)
     {
         //current state has expired, request new state update
     
         this->updateState();
     }
     
-    if (!currentState->flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
+    if (!currentState.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
     {
         //check if the component state has changed to prevent spamming of log messages
-        if (currentState->getStatus() != currentState->previousStatus)
+        if (currentState.getStatus() != previousStatus)
         {
             //log the changes
-            this->_logcb(handler + " Component: " + std::to_string(cid) + " error: " + std::to_string(currentState->getStatus()));
+            this->_logcb(handler + " Component: " + std::to_string(cid) + " error: " + std::to_string(currentState.getStatus()));
             //update previous state
-            this->p_getState()->previousStatus = currentState->getStatus();
+            this->previousStatus = currentState.getStatus();
         }
         return 1;
     }

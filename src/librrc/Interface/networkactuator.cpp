@@ -34,28 +34,24 @@ void NetworkActuator::updateState(){
     getstate_packet.header.destination_service = _destinationService;
 
     _networkmanager.sendPacket(getstate_packet);
-    _state.lastNewStateRequestTime = millis();
+    lastStateRequestTime = millis();
 };
 
 void NetworkActuator::networkCallback(packetptr_t packetptr){
     if (packetptr->header.source != _address){
-        #ifdef _RICDEBUG
-        std::cout<<"bad packet source"<<std::endl;
-        #endif
         return; // packet had incorrect data
     }
     switch (packetptr->header.type){
         case(static_cast<uint8_t>(NRCPacket::TYPES::NRC_STATE)):
         {
             NRCStatePacket nrcstatepacket(*packetptr); //deserialize state packet
-            _state.lastNewStateUpdateTime = millis();
-            _state.currentValue = nrcstatepacket.value;
-            _state.trackRemoteStatus(nrcstatepacket.state);
+            lastStateUpdateTime = millis();
+            currentValue = nrcstatepacket.value;
+            _state.trackRemoteState(nrcstatepacket.state);
         }
     
     }
 
-   
 };
 
 void NetworkActuator::arm(){

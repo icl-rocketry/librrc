@@ -14,9 +14,9 @@ void NetworkSensor::networkCallback(packetptr_t packetptr){
         case(static_cast<uint8_t>(NRCPacket::TYPES::NRC_STATE)):
         {
             NRCStatePacket nrcstatepacket(*packetptr); //deserialize state packet
-            _state.lastNewStateUpdateTime = millis();
-            _state.sensorValue = *reinterpret_cast<float*>(&nrcstatepacket.value); // reinterpret int32 as a float
-            _state.trackRemoteStatus(nrcstatepacket.state);
+            lastStateUpdateTime = millis();
+            sensorValue = *reinterpret_cast<float*>(&nrcstatepacket.value); // reinterpret int32 as a float
+            _state.trackRemoteState(nrcstatepacket.state);
         }
     
     }
@@ -35,5 +35,5 @@ void NetworkSensor::updateState(){
 
     _networkmanager.sendPacket(getstate_packet);
     
-    _state.lastNewStateRequestTime = millis();
+    lastStateRequestTime = millis();
 }

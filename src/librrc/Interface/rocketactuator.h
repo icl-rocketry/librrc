@@ -7,9 +7,7 @@
 // 
 #include <librrc/Helpers/rrclog.h>
 
-struct RocketActuatorState:public RocketComponentState{
-    int32_t currentValue;
-};
+
 
 class RocketActuator: public RocketComponent{
     public:
@@ -21,6 +19,11 @@ class RocketActuator: public RocketComponent{
 
         virtual void execute(int32_t param) = 0;
 
+        virtual int32_t getValue() { return currentValue;};
+
         virtual ~RocketActuator() = 0;
+    
+    protected:
+        int32_t currentValue;
 
 };

@@ -3,7 +3,7 @@
 
 #include "rocketcomponent.h"
 #include "rocketcomponenttype.h"
-
+#include "networkcomponentstate.h"
 #include "rocketactuator.h"
 
 #include <librnp/rnp_networkmanager.h>
@@ -11,9 +11,7 @@
 #include <librrc/Helpers/rrclog.h>
 #include <librrc/componentstatusflags.h>
 
-struct NetworkActuatorState : public RocketActuatorState{
-    //cant think of any other members required here currently
-};
+
 
 class NetworkActuator: public RocketActuator{
 
@@ -79,7 +77,7 @@ class NetworkActuator: public RocketActuator{
 
         RnpNetworkManager& _networkmanager;
 
-        NetworkActuatorState _state;
+        NetworkComponentState _state;
 
 
         /**
@@ -87,6 +85,6 @@ class NetworkActuator: public RocketActuator{
          * 
          * @return ComponentState* 
          */
-        RocketComponentState* p_getState() override {return &_state;};
+        RocketComponentState& getState() override {return _state;};
     
 };

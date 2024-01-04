@@ -3,15 +3,13 @@
 #include "rocketcomponent.h"
 #include "rocketcomponenttype.h"
 #include "rocketsensor.h"
+#include "networkcomponentstate.h"
 
 #include <librnp/rnp_networkmanager.h>
 
 
 #include <librrc/Helpers/rrclog.h>
 
-struct NetworkSensorState: public RocketSensorState{
-    //no extra members currently
-};
 
 class NetworkSensor:public RocketSensor{
 
@@ -44,13 +42,13 @@ class NetworkSensor:public RocketSensor{
         const uint8_t _destinationService; 
 
         RnpNetworkManager& _networkmanager;
-        NetworkSensorState _state;
+        NetworkComponentState _state;
 
          /**
          * @brief Returns a pointer to the state of the component
          * 
          * @return ComponentState* 
          */
-        RocketComponentState* p_getState() override {return &_state;};
+        RocketComponentState& getState() override {return _state;};
     
 };
