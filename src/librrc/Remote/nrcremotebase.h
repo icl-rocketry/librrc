@@ -19,6 +19,7 @@
 #include <librrc/componentstatusflags.h>
 #include <librrc/Helpers/bitwiseflagmanager.h>
 #include <librrc/Packets/nrcpackets.h>
+#include <librrc/Interface/rocketcomponent.h>
 
 #include <librnp/default_packets/simplecommandpacket.h>
 #include <librnp/rnp_networkmanager.h>
@@ -49,7 +50,7 @@ public:
 protected:
 
     RnpNetworkManager& _networkmanager;
-    LIBRRC::BitwiseFlagManager<LIBRRC::COMPONENT_STATUS_FLAGS> _state;
+    RocketComponent::RocketComponentState _state;
     int32_t _value;
 
     void handlecommand(packetptr_t packetptr){
