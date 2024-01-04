@@ -7,10 +7,6 @@
 #include <librrc/Packets/nrcpackets.h>
 #include <librrc/componentstatusflags.h>
 
-
-
-
-
 void NetworkActuator::execute(int32_t param){
     
 
@@ -54,8 +50,8 @@ void NetworkActuator::networkCallback(packetptr_t packetptr){
 
 };
 
-void NetworkActuator::arm(){
-    SimpleCommandPacket arm_packet(static_cast<uint8_t>(NRCPacket::NRC_COMMAND_ID::ARM),0);  // future implementation can use a magic value here effectivley authenitcating the arm command?
+void NetworkActuator::arm(int32_t arg){
+    SimpleCommandPacket arm_packet(static_cast<uint8_t>(NRCPacket::NRC_COMMAND_ID::ARM),arg);  // future implementation can use a magic value here effectivley authenitcating the arm command?
     arm_packet.header.type = static_cast<uint8_t>(NRCPacket::TYPES::NRC_COMMAND);
     arm_packet.header.source = _networkmanager.getAddress();
     arm_packet.header.source_service = _sourceService;
@@ -66,3 +62,14 @@ void NetworkActuator::arm(){
 }
 
 
+void NetworkActuator::disarm()
+{
+    SimpleCommandPacket disarm_packet(static_cast<uint8_t>(NRCPacket::NRC_COMMAND_ID::DISARM),0);  // future implementation can use a magic value here effectivley authenitcating the arm command?
+    disarm_packet.header.type = static_cast<uint8_t>(NRCPacket::TYPES::NRC_COMMAND);
+    disarm_packet.header.source = _networkmanager.getAddress();
+    disarm_packet.header.source_service = _sourceService;
+    disarm_packet.header.destination = _address;
+    disarm_packet.header.destination_service = _destinationService;
+
+    _networkmanager.sendPacket(disarm_packet);
+}

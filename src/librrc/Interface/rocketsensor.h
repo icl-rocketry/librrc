@@ -18,7 +18,7 @@ class RocketSensor:public RocketComponent{
          * 
          * @return float 
          */
-        virtual float getValue() { return sensorValue;};
+        virtual float getValue();
 
         virtual ~RocketSensor() = 0;
 

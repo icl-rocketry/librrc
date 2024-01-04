@@ -45,7 +45,9 @@ class NetworkActuator: public RocketActuator{
             // logcb("Actuator:" + std::to_string(id) + " constructed" + std::to_string(address));
         };
 
-        void arm() override;
+        void arm(int32_t arg) override;
+
+        void disarm() override;
 
         /**
          * @brief Actuates the Actuator with a given param
@@ -59,7 +61,6 @@ class NetworkActuator: public RocketActuator{
         void updateState() override;
 
         
-
         /**
          * @brief Network callback function used to process packets recevied by the network manager. This will usually be managed by
          *        a managing object.

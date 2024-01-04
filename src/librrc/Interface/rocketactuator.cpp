@@ -2,3 +2,11 @@
 
 RocketActuator::~RocketActuator(){};
 
+void RocketActuator::arm(){
+    this->arm(defaultArmArg);
+}
+
+int32_t RocketActuator::getvalue()
+{
+    return currentValue;
+}

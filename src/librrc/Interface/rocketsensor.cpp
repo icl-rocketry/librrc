@@ -8,3 +8,7 @@
 
 RocketSensor::~RocketSensor(){};
 
+float RocketSensor::getValue()
+{
+    return sensorValue;
+}

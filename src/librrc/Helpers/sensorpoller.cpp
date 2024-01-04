@@ -11,9 +11,7 @@ void SensorPoller::update()
     if (millis() - last_time > _poll_interval)
     {
         _networksensor->updateState();
-        // sensorState = static_cast<const NetworkSensorState *>(_networksensor->getState());
-
-        // if (sensorState->lastNewStateUpdateTime > prevNewUpdateTime){
+ 
         if (_networksensor->getLastStateUpdateTime() > prevNewUpdateTime)
         {
             newdata = true;
