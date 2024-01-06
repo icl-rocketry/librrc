@@ -45,6 +45,12 @@ class NetworkActuator: public RocketActuator{
             // logcb("Actuator:" + std::to_string(id) + " constructed" + std::to_string(address));
         };
 
+        /**
+         * @brief Inorder to expose the default arm override in the RocketActuator Base class
+         * 
+         */
+        using RocketActuator::arm;
+
         void arm(int32_t arg) override;
 
         void disarm() override;
@@ -86,6 +92,6 @@ class NetworkActuator: public RocketActuator{
          * 
          * @return ComponentState* 
          */
-        RocketComponentState& getState() override {return _state;};
+        RocketComponentState& getStateMutable() override {return _state;};
     
 };

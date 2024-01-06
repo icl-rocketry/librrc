@@ -8,7 +8,7 @@ namespace LIBRRC{
     enum class COMPONENT_STATUS_FLAGS:uint16_t{
         NOMINAL = (1<<0),
         DISARMED = (1<<1),
-        ERROR_NORESPONSE = (1<<2),
+        ERROR_NORESPONSE = (1<<2), //Deprecated
         ERROR_CONTINUITY = (1<<3),
         ERROR_PINS = (1<<4),
         ERROR_I2C = (1<<5),

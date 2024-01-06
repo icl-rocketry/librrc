@@ -23,7 +23,7 @@ void NRCRemoteTempSSR::update()
         // abuse flight check to handle the updates?? lmao
         if (!_netTemp1->flightCheck(1000, 250, "TempSSR"))
         {
-            float temp1 = static_cast<const RocketSensorState *>(_netTemp1->getState())->sensorValue;
+            float temp1 = _netTemp1->getValue();
             update(temp1);
             return;
         }
@@ -33,8 +33,8 @@ void NRCRemoteTempSSR::update()
 
         bool error_netTemp1 = _netTemp1->flightCheck(1000, 250, "TempSSR");
         bool error_netTemp2 = _netTemp2->flightCheck(1000, 250, "TempSSR");
-        float temp1 = static_cast<const RocketSensorState *>(_netTemp1->getState())->sensorValue;
-        float temp2 = static_cast<const RocketSensorState *>(_netTemp2->getState())->sensorValue;
+        float temp1 = _netTemp1->getValue();
+        float temp2 = _netTemp2->getValue();
 
         if (!(error_netTemp1 && error_netTemp2))
         {

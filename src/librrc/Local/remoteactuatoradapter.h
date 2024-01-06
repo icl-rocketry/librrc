@@ -1,5 +1,15 @@
 #pragma once
-
+/**
+ * @file remoteactuatoradapter.h
+ * @author Kiran de Silva (kd619@ic.ac.uk)
+ * @brief Provides an adapter to allow NRCRemoteActuators to be used locally without the overhead
+ * of serializing and de-serializing through the loopback interface.
+ * @version 0.1
+ * @date 2024-01-04
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #include <Arduino.h>
 
 #include <librrc/Interface/rocketcomponent.h>
@@ -30,6 +40,7 @@ class RemoteActuatorAdapter : public RocketActuator
         void updateState() override 
         {
             lastStateRequestTime = millis();
+            m_remoteActuator.updateState();
             lastStateUpdateTime = millis();
         };
 
@@ -43,7 +54,7 @@ class RemoteActuatorAdapter : public RocketActuator
     protected:
         REMOTE_T& m_remoteActuator;
 
-        RocketComponentState& getState() override {return m_remoteActuator._state;};
+        RocketComponentState& getStateMutable() override {return m_remoteActuator._state;};
     
     private:
         /**

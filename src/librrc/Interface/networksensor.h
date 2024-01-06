@@ -49,6 +49,6 @@ class NetworkSensor:public RocketSensor{
          * 
          * @return ComponentState* 
          */
-        RocketComponentState& getState() override {return _state;};
+        RocketComponentState& getStateMutable() override {return _state;};
     
 };

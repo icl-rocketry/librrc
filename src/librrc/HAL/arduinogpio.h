@@ -1,6 +1,5 @@
 #pragma once
 
-// #include <Arduino.h>
 #include <esp32-hal-gpio.h>
 
 class ArduinoGpio
@@ -12,28 +11,32 @@ class ArduinoGpio
             GPIO_INPUT = INPUT
         };
 
-        enum class LEVEL:uint8_t{
-            GPIO_LOW = LOW,
-            GPIO_HIGH = HIGH
-        };
+        // enum class LEVEL:uint8_t{
+        //     GPIO_LOW = LOW,
+        //     GPIO_HIGH = HIGH
+        // };
+
+        ArduinoGpio(uint8_t pin):
+        m_pin(pin)
+        {};
 
         void pinMode(PINMODE pinmode)
         {
 
-            pinMode(pin,static_cast<uint8_t>(pinmode));
+            ::pinMode(m_pin,static_cast<uint8_t>(pinmode));
 
         };
 
-        void digitalWrite(LEVEL level)
+        void digitalWrite(uint8_t level)
         {
-            digitalWrite(pin,static_cast<uint8_t>(level));
+            ::digitalWrite(m_pin,level);
         };
 
         int digitalRead()
         {
-            return digitalRead(pin);
+            return ::digitalRead(m_pin);
         }
 
     private:
-        const uint8_t pin;
+        const uint8_t m_pin;
 };

@@ -29,7 +29,7 @@ class RocketComponent{
          * 
          * @return const RocketComponentState& 
          */
-        const RocketComponentState& getState() const {return getState();};
+        const RocketComponentState& getState() {return this->getStateMutable();};
         uint32_t getLastStateUpdateTime() {return lastStateUpdateTime;};
         uint32_t getLastStateRequestTime() { return lastStateRequestTime;};
 
@@ -55,14 +55,14 @@ class RocketComponent{
         const uint8_t _id;
 
         /**
-         * @brief Returns a non const pointer to the component state allowing parent class
+         * @brief Returns a non const reference to the component state allowing parent class
          * to update state of component
          * 
          * @return RocketComponentState* 
          */
         // virtual RocketComponentState* p_getState() = 0;
 
-        virtual RocketComponentState& getState() = 0;
+        virtual RocketComponentState& getStateMutable() = 0;
         LIBRRC::component_status_flags_t previousStatus;
         uint32_t lastStateUpdateTime;
         uint32_t lastStateRequestTime;
