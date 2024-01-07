@@ -29,19 +29,6 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
 
     public:
 
-       
-        // template<typename T> NRCRemotePyro(uint8_t firePin, uint8_t contPin, RnpNetworkManager &networkmanager) -> NRCRemotePyro<ArduinoGpio>;
-        // /**
-        //  * @brief Construct a new NRCRemotePyro object with default arduino gpio for backwards compatibility
-        //  * 
-        //  * @param firePin 
-        //  * @param contPin 
-        //  * @param networkmanager 
-        //  */
-        // NRCRemotePyro(uint8_t firePin, uint8_t contPin, RnpNetworkManager &networkmanager) : 
-        // NRCRemotePyro(ArduinoGpio(firePin),ArduinoGpio(contPin), networkmanager)
-        // {};
-
         /**
          * @brief Construct a new NRCRemotePyro object with generic GPIOHAL 
          * 
@@ -113,7 +100,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
         //Adapter Interface
 
         friend class RemoteActuatorAdapter<NRCRemotePyro<GPIOHAL>>;
-    public:
+
         /**
          * @brief Arm pyro, if arg == 1, continuity is ignored
          * 
@@ -149,7 +136,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
             this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
             this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
         };
-    public:
+
         /**
          * @brief Pyro exectutor
          * 
@@ -166,6 +153,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
 
             if (offTaskHandle == nullptr)
             {
+                disarm();
                 this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR);
                 //maybe log this somewehere too
                 offTimeDeadline = 0;
@@ -242,24 +230,27 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
                                                             // create local copy of data as task data is not static
                                                             TaskData_t taskdata = *reinterpret_cast<TaskData_t *>(pvParameters);
                                                             uint32_t notificationData = 0;
-                                                            BaseType_t notifyReturn = pdTRUE;
-
+                                                            
                                                             for (;;)
                                                             {
                                                                 //block on notification here
                                                                 xTaskNotifyWait(0,0,&notificationData,portMAX_DELAY);
 
                                                                 taskdata.firePin.digitalWrite(1);
+
+                                                                BaseType_t notifyReturn = pdTRUE;
                                                                 //block on notification for givien time period
                                                                 while (notifyReturn == pdTRUE) // if we receieve a new request to keep the pyro on during the wait
                                                                 {
                                                                     TickType_t ticksToWait = notificationData / portTICK_PERIOD_MS;
+                                                            
                                                                     // xTaskNotifyWait returns pdFalse if no notification is recived during timeout, i.e pyro on time has been fully waited
                                                                     notifyReturn = xTaskNotifyWait(0,0,&notificationData, ticksToWait);
+                                                               
                                                                 }
-
                                                                 //can only exit if notifyRetunr == pdFalse
                                                                 taskdata.firePin.digitalWrite(0);
+                                                               
                                                             }
                                                             
                                                         },
@@ -275,25 +266,16 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
 
             if (offTaskHandle == nullptr)
             {
+                this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR);
                 return false;
-                Serial.println("Kiran messed up task stack allocation, get stack highwater mark and make fun of him");
             }
             return true;
         }
 
     protected: //Variables
 
-        // template<typename T> friend class NRCRemoteActuatorBase<NRCRemotePyro<T>>;
-        // template<typename T> friend class NRCRemoteBase<NRCRemoteActuatorBase<NRCRemotePyro<T>>>;
-
-
         template<typename T> friend class NRCRemoteActuatorBase;
         template<typename T> friend class NRCRemoteBase;
-       
-        // friend class NRCRemoteBase;
-
-        // friend class NRCRemoteActuatorBase;
-        // friend class NRCRemoteBase;
 
         /**
          * @brief gpio fire pin to trigger pyro
@@ -330,7 +312,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
          * @brief Task stack size
          *
          */
-        static constexpr int offTaskStackSize = 10000;
+        static constexpr int offTaskStackSize = 1500;
         /**
          * @brief Task stack
          *
