@@ -262,8 +262,6 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
                                                         &offTaskTCB, 
                                                         1);
 
-            vTaskDelay(1); // make sure the offTask is spawned -> i dont think this is necessary but i had it here before so oh well
-
             if (offTaskHandle == nullptr)
             {
                 this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR);
