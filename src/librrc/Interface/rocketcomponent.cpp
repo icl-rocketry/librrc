@@ -10,7 +10,7 @@ RocketComponent::~RocketComponent(){};
 bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::string handler){
     const RocketComponentState& currentState = this->getState();
     const uint8_t cid = this->getID();
-
+    
     if (lastStateRequestTime > lastStateUpdateTime) //component hasnt sent new update
     {
         if (millis() - lastStateRequestTime > timeout) //component timeout
