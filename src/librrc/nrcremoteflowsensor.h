@@ -2,14 +2,12 @@
 
 /**
  * @file FlowSensor.h
- * @author Soham More 
+ * @author Soham More
  * @brief Class to read an analog flow sensor and convert it to a mass flow rate
  * @version 0.1
  * @date 2023-01-23
  */
 
-
-#include "Sensors/ADS131M06.h"
 #include <stdint.h>
 
 #include <librrc/nrcremotesensorbase.h>
@@ -20,43 +18,71 @@
 
 #include <driver/pcnt.h>
 
-class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor> {
- 
-    public: 
+class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor>
+{
 
-        NRCRemoteFlowSensor(uint8_t& gpioSig, RnpNetworkManager& netman, float k) : NRCRemoteSensorBase(netman),_gpioSig(gpioSig) _k(k){};
+public:
+    NRCRemoteFlowSensor(RnpNetworkManager &netman, uint8_t _gpioSig, float _k);
 
-            uint16_t _flowSensorCurrCount = 0.0;
-            uint16_t _flowSensorPrevCount = 0.0;
-            float _flowSensorCurrTime = 0.0;
-            float _flowSensorPrevTime = 0.0;
-        
+    int16_t _flowSensorCurrCount = 0;
+    int16_t _flowSensorPrevCount = 0;
+    int32_t _flowSensorCurrTime = 0;
+    int32_t _flowSensorPrevTime = 0;
 
-        float getValue(){ return _flowRate;};
+    float getValue() { return _flowRate; };
 
-        void update(){};
+    void update();
 
-            
-    private: 
+    void setup()
+    {
+        /* Prepare configuration for the PCNT unit */
+        pcnt_config_t pcnt_config = {
+            // Set PCNT input signal and control GPIOs
+            .pulse_gpio_num = _gpioSig,
+            .ctrl_gpio_num = PCNT_PIN_NOT_USED,
+            .pos_mode = PCNT_CHANNEL_EDGE_ACTION_HOLD, // Count up on the positive edge
+            .neg_mode = PCNT_CHANNEL_EDGE_ACTION_INCREASE, // Keep the counter value on the negative edge
+            .counter_h_lim = 32767,
+            .counter_l_lim = 0,
+            .unit = PCNT_UNIT_0,
+            .channel = PCNT_CHANNEL_0
 
-        float _flowRate;
-        uint16_t _flowSensorCurrCount;
-        uint16_t _flowSensorPrevCount;
-        float _flowSensorCurrTime;
-        float _flowSensorPrevTime;
+            // What to do on the positive / negative edge of pulse input?
 
-        float _minL = -10;
-        float _maxL = 10;
-        float _ThreshVal1 = 5;
-        float _ThreshVal0 = -5;
+            // What to do when control input is low or high?
 
-        //Control and signal Pins
-        uint8_t gpioSig = 4;
-        uint8_t gpioCtrl;
+            // Set the maximum and minimum limit values to watch
 
-        typedef struct{
-            int unit;
-            uint32_t status;    
-        } pcnt_evt_t;
-        
+        };
+
+        /* Initialize PCNT unit */
+        pcnt_unit_config(&pcnt_config);
+
+        pcnt_counter_pause(PCNT_UNIT_0);
+        pcnt_counter_clear(PCNT_UNIT_0);
+        pcnt_counter_resume(PCNT_UNIT_0);
+    }
+
+private:
+    float _flowRate;
+    // uint16_t _flowSensorCurrCount;
+    // uint16_t _flowSensorPrevCount;
+    // float _flowSensorCurrTime;
+    // float _flowSensorPrevTime;
+
+    float _minL = -10;
+    float _maxL = 10;
+    float _ThreshVal1 = 5;
+    float _ThreshVal0 = -5;
+    
+    uint8_t _gpioSig;
+    float _k;
+
+    typedef struct
+    {
+        int unit;
+        uint32_t status;
+    } pcnt_evt_t;
+
+    
 };
