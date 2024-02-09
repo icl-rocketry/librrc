@@ -92,21 +92,25 @@ void NRCRemoteServo::goto_AngleHighRes(float angle)
 {
     /*Check if angle value is outside of angle limits. Would also have added checking for the min_angle and max_angle but 
     rangemap function already has checking for that so there's no point. */
+    float gotoangle;
 
     if (angle > _angl_lim_max)
     {
         _value = _angl_lim_max;
+        gotoangle = _angl_lim_max;
     }
     else if (angle < _angl_lim_min)
     {
         _value = _angl_lim_min;
+        gotoangle = _angl_lim_min;
     }
     else
     {
         _value = angle; // update new position of actuator
+        gotoangle = angle;
     }
 
-    ledcWrite(_channel, angletocountsHighRes(angle));
+    ledcWrite(_channel, angletocountsHighRes(gotoangle));
 }
 
 float NRCRemoteServo::angletocountsHighRes(float angle)
