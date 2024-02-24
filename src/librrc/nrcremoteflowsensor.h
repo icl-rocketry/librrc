@@ -14,6 +14,7 @@ class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor>
 
     private:
         float _flowRate; 
+        float _AvgflowRate;
         uint8_t _gpioSig;
         float _k;
 
@@ -37,7 +38,7 @@ class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor>
         int32_t _flowSensorPrevTime = 0;
 
        
-        float getFlowRate() { return _flowRate; };
+        float getValue() { return _AvgflowRate; };
         void update();
 
         void setup()
@@ -62,20 +63,6 @@ class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor>
             pcnt_counter_clear(PCNT_UNIT_0);
             pcnt_counter_resume(PCNT_UNIT_0);
         }
-
-         float getValue()
-         {
-            MovingAvgSamples.push_back(getFlowRate());
-            if (MovingAvgSamples.size() > _numSamples)
-            {
-                MovingAvgSamples.pop_front();   
-            }
-            float MovingAverageSum = 0.0;
-            for (float sample: MovingAvgSamples)
-            {
-                MovingAverageSum += sample;
-            }
-            return MovingAverageSum*sampleCoeff;
-        }
+        
 
 };
