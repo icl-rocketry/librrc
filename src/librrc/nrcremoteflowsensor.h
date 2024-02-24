@@ -25,8 +25,6 @@ class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor>
         } pcnt_evt_t;
 
         std::deque<float> MovingAvgSamples;
-        int _numSamples = 10;
-        float sampleCoeff = 0.1;
         
 
     public:
@@ -64,5 +62,6 @@ class NRCRemoteFlowSensor : public NRCRemoteSensorBase<NRCRemoteFlowSensor>
             pcnt_counter_resume(PCNT_UNIT_0);
         }
         
-
+        int _numSamples = 10;
+        float sampleCoeff = 0.1;
 };
