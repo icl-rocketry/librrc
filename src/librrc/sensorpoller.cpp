@@ -3,33 +3,33 @@
 
 void SensorPoller::setup()
 {
-    last_time = millis();
+    m_lastTime = millis();
 }
 
 void SensorPoller::update()
 {
-    if (millis() - last_time > _poll_interval)
+    if (millis() - m_lastTime > m_pollInterval)
     {
-        _networksensor -> updateState();
-        sensorState = static_cast<const NetworkSensorState *>(_networksensor->getState());
+        m_networkSensor -> updateState();
+        m_sensorState = static_cast<const NetworkSensorState*>(m_networkSensor->getState());
 
-        if (sensorState->lastNewStateUpdateTime > prevNewUpdateTime){
-            newdata = true;
-            sensorvalue = sensorState->sensorValue;
-            prevNewUpdateTime = sensorState->lastNewStateUpdateTime;
+        if (m_sensorState->lastNewStateUpdateTime > m_prevNewUpdateTime){
+            newData = true;
+            m_sensorValue = m_sensorState->sensorValue;
+            m_prevNewUpdateTime = m_sensorState->lastNewStateUpdateTime;
         }
 
-        if (sensorState->lastNewStateRequestTime >= sensorState->lastNewStateUpdateTime){
-            if (sensorState->lastNewStateRequestTime >= networkTimeout){
-                //throw some sort of error (Kiran)
+        if (m_sensorState->lastNewStateRequestTime >= m_sensorState->lastNewStateUpdateTime){
+            if (m_sensorState->lastNewStateRequestTime >= m_networkTimeout){
+                throw std::runtime_error("Sensor with ID: " + std::to_string(m_networkSensor->getID()) + " not responding to poll request");
             }
         }
-        
-        last_time = millis();
+
+        m_lastTime = millis();
     }
 }
 
 float SensorPoller::getVal()
 {
-    return sensorvalue;
+    return m_sensorValue;
 }
