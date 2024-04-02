@@ -9,7 +9,7 @@
  */
 
 
-#include <librrc/nrcremotesensorbase.h>
+#include <librrc/Remote/nrcremotesensorbase.h>
 #include <librnp/rnp_networkmanager.h>
 #include <libriccore/platform/esp32/PCNT.h> 
 #include <driver/pcnt.h>
@@ -48,7 +48,19 @@ public:
         //get current count 
         _flowSensorCurrCount = pcnt.getCount();
         //find difference
-        uint16_t countDiff = (uint16_t)abs((_flowSensorCurrCount - _flowSensorPrevCount));
+        // uint16_t countDiff = (uint16_t)abs((_flowSensorCurrCount - _flowSensorPrevCount));
+
+
+        uint16_t countDiff; 
+        if (_flowSensorCurrCount < _flowSensorPrevCount)
+        {
+            countDiff = (_flowSensorCurrCount + INT16_MAX) - _flowSensorPrevCount;
+        }
+        else 
+        {
+            countDiff = _flowSensorCurrCount - _flowSensorPrevCount;
+        }
+        
         //  Serial.println(countDiff);
         //convert to flow rate and update
         _flowRate = 1E6*_k*((float)countDiff/(float)(_flowSensorCurrTime - _flowSensorPrevTime))*0.5;
