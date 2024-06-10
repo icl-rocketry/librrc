@@ -82,6 +82,7 @@ public:
     uint16_t getHome(){return _default_angle;};
     uint16_t getMin(){return _angl_lim_min;};
     uint16_t getMax(){return _angl_lim_max;};
+    uint16_t getAngle(){return _value;};
    
 protected:
 
