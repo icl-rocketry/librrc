@@ -48,6 +48,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
          */
         void setup()
         {
+            m_firePin.digitalWrite(0); //ensure output is zero
             m_firePin.pinMode(PINMODE::GPIO_OUTPUT);
             m_firePin.digitalWrite(0);
             m_contPin.pinMode(PINMODE::GPIO_INPUT);
