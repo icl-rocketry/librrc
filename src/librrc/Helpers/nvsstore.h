@@ -18,7 +18,8 @@ public:
         Thermistor = 2,
         Thermocouple = 3,
         Servo = 4,
-        Canard = 5
+        Canard = 5,
+        Solenoid = 6,
     };
     
     NVSStore(std::string NVSName, NVSStore::calibrationType calibrationType):

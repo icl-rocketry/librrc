@@ -1,6 +1,7 @@
 #include "nrcremotesolenoid.h"
 #include <Arduino.h>
 #include <Preferences.h>
+#include <librrc/Packets/solenoidcalibrationpacket.h>
 
 #include <librrc/Helpers/nvsstore.h>
 
@@ -8,8 +9,9 @@ void NRCRemoteSolenoid::setup()
 {
     // 1 always opens 0 always closes 
     pinMode(_togglePin, OUTPUT);
-    digitalWrite(_togglePin, LOW);
     pinMode(_contPin, INPUT); 
+    digitalWrite(_togglePin, LOW);
+    loadCalibration();
     this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
     updateContinuity();
 }
@@ -30,7 +32,11 @@ void NRCRemoteSolenoid::execute(int32_t arg)
     { 
         return;
     }       
-    if (arg == 1)
+    if (home_state) { // if home state is true, nomially open, 1 command to open flips to 0 doing nothing
+                      // if home state is false, nominally closed, 1 command stays opening it
+        arg = !arg;
+    }
+    if (arg == 1 )
     {
         digitalWrite(_togglePin, HIGH);
     }
@@ -66,6 +72,7 @@ void NRCRemoteSolenoid::arm(int32_t arg)
         this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
     }
 };
+
 void NRCRemoteSolenoid::updateContinuity()
 {
     if (digitalRead(_contPin)) // high if continuity - True
@@ -84,6 +91,39 @@ void NRCRemoteSolenoid::updateContinuity()
     }
 }
 
+
+void NRCRemoteSolenoid::loadCalibration(){
+    
+    std::string NVSName = "Soln" + std::to_string(_togglePin);
+    NVSStore _NVS(NVSName, NVSStore::calibrationType::Solenoid);
+    
+
+    std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
+    
+    if(calibSerialised.size() == 0){
+        setHomeState(0); // default is nominally closed
+        return;
+    }
+    SolenoidCalibrationPacket calibpacket;
+    calibpacket.deserializeBody(calibSerialised);
+
+    setHomeState(calibpacket.home_state);
+
+}
+
+void NRCRemoteSolenoid::calibrate_impl(packetptr_t packetptr){
+    
+    SolenoidCalibrationPacket calibrate_comm(*packetptr);
+
+    std::vector<uint8_t> serialisedvect = packetptr->getBody();
+
+    std::string NVSName = "Soln" + std::to_string(_togglePin);
+    NVSStore _NVS(NVSName, NVSStore::calibrationType::Solenoid);
+    
+    _NVS.saveBytes(serialisedvect);
+    
+    setHomeState(calibrate_comm.home_state);
+}
 
 // 1 this pc
 // 0 serial direct connection
