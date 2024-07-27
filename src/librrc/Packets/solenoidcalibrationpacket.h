@@ -12,7 +12,7 @@ class SolenoidCalibrationPacket : public RnpPacket{
         {
             auto ret = RnpSerializer(
                 &SolenoidCalibrationPacket::command,
-                &SolenoidCalibrationPacket::home_state
+                &SolenoidCalibrationPacket::normalState
             );
 
             return ret;
@@ -39,7 +39,7 @@ class SolenoidCalibrationPacket : public RnpPacket{
         void deserializeBody(std::vector<uint8_t>& buf);
         
         uint8_t command;
-        uint16_t home_state;
+        uint16_t normalState;
 
         static constexpr size_t size(){
             return getSerializer().member_size();

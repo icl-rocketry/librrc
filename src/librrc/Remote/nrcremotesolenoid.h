@@ -20,11 +20,11 @@ public:
     {};
 
     void setup();
-    void setHomeState(uint16_t state) {
+    void setNormalState(uint16_t state) {
         if (state == 0) {
-            home_state = false;
+            normalState = 0;
         } else if (state == 1) {
-            home_state = true;
+            normalState = 1;
         }
     }
 
@@ -37,7 +37,7 @@ protected:
     const uint8_t _togglePin;
     const uint8_t _contPin;
     bool m_contCheckOverride = false;
-    bool home_state; // false = nominally closed, true = nominally open
+    bool normalState = 0; // 0 = normally closed, 1 = normally open
     void execute(int32_t arg);
     void execute_impl(packetptr_t packetptr);
     void arm(int32_t arg);

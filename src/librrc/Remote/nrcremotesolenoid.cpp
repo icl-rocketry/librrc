@@ -32,7 +32,7 @@ void NRCRemoteSolenoid::execute(int32_t arg)
     { 
         return;
     }       
-    if (home_state) { // if home state is true, nomially open, 1 command to open flips to 0 doing nothing
+    if (normalState) { // if home state is true, nomially open, 1 command to open flips to 0 doing nothing
                       // if home state is false, nominally closed, 1 command stays opening it
         arg = !arg;
     }
@@ -99,15 +99,15 @@ void NRCRemoteSolenoid::loadCalibration(){
     
 
     std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
-    
     if(calibSerialised.size() == 0){
-        setHomeState(0); // default is nominally closed
+        Serial.println("calib size == 0, " + String(_togglePin));
+        setNormalState(0); // default is nominally closed
         return;
     }
     SolenoidCalibrationPacket calibpacket;
     calibpacket.deserializeBody(calibSerialised);
 
-    setHomeState(calibpacket.home_state);
+    setNormalState(calibpacket.normalState);
 
 }
 
@@ -122,7 +122,7 @@ void NRCRemoteSolenoid::calibrate_impl(packetptr_t packetptr){
     
     _NVS.saveBytes(serialisedvect);
     
-    setHomeState(calibrate_comm.home_state);
+    setNormalState(calibrate_comm.normalState);
 }
 
 // 1 this pc
