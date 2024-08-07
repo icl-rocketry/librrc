@@ -15,30 +15,32 @@
 #include <stdint.h>
 #include <libriccore/riccorelogging.h>
 
+#include <librrc/Helpers/nvsstore.h>
+#include <librrc/packets/potentiometercalibrationpacket.h>
+
 class nrcremotepotentiometer : public NRCRemoteSensorBase<nrcremotepotentiometer>
 {
 
 public: 
-    nrcremotepotentiometer(RnpNetworkManager &netman, uint8_t _gpioSig) : NRCRemoteSensorBase(netman), adc(_gpioSig){};
+    nrcremotepotentiometer(RnpNetworkManager &netman, uint8_t m_gpioSig, uint8_t m_potentindex, float m_zero_angl = 0, float m_max_angl = 360) : NRCRemoteSensorBase(netman), adc(m_gpioSig), potentindex(m_potentindex), zero_angl(m_zero_angl), max_angl(m_max_angl){loadCalibration();};
 
 
     void setup(){
         adc.setup();
     };
 
-    void update(){
-        
-        adc.update();
-        adccount = adc.getADC();
-        potentang = ((float) adccount)/4096.0 * 360.0;
-        updateSensorValue(potentang);
-    }
+    void update();
 
     float getValue(){return potentang;}
 
+    void calibrate_impl(packetptr_t packetptr);
+
 private:
     ADC adc;
+    uint8_t potentindex;
     int16_t adccount;
+    float zero_angl;
+    float max_angl;
     float potentang;
-
+    void loadCalibration();
 };
