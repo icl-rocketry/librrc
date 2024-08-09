@@ -12,7 +12,7 @@ SolenoidCalibrationPacket::~SolenoidCalibrationPacket()
 
 SolenoidCalibrationPacket::SolenoidCalibrationPacket():
 RnpPacket(0,
-          105,
+          115,
           size())
 {};
 

@@ -22,7 +22,7 @@ void NRCRemoteSolenoid::execute_impl(packetptr_t packetptr)
     execute(execute_command.arg);
 }
 
-void NRCRemoteSolenoid::execute(int32_t arg)
+void NRCRemoteSolenoid::execute(int32_t arg) 
 {
     if (arg < 0)
     {
@@ -31,20 +31,20 @@ void NRCRemoteSolenoid::execute(int32_t arg)
     if (!this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
     { 
         return;
-    }       
-    if (normalState) { // if home state is true, nomially open, 1 command to open flips to 0 doing nothing
-                      // if home state is false, nominally closed, 1 command stays opening it
-        arg = !arg;
-    }
-    if (arg == 1 )
-    {
-        digitalWrite(_togglePin, HIGH);
-    }
-    if (arg == 0)
-    {
+    }  
+    _value = arg; // 1 always opens 0 always closes    
+    if (normalState == 0 && arg == 0) { 
         digitalWrite(_togglePin, LOW);
     }
-    
+    if (normalState == 0 && arg == 1) { 
+        digitalWrite(_togglePin, HIGH);
+    }
+    if (normalState == 1 && arg == 0) { 
+        digitalWrite(_togglePin, HIGH);
+    }
+    if (normalState == 1 && arg == 1) { 
+        digitalWrite(_togglePin, LOW);
+    }
 
 }
 void NRCRemoteSolenoid::arm_impl(packetptr_t packetptr)
