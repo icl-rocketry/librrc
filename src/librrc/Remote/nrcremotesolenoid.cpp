@@ -9,11 +9,11 @@ void NRCRemoteSolenoid::setup()
 {
     // 1 always opens 0 always closes 
     pinMode(_togglePin, OUTPUT);
-    pinMode(_contPin, INPUT); 
     digitalWrite(_togglePin, LOW);
     loadCalibration();
     this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
-    updateContinuity();
+    this->_value = normalState;
+
 }
 
 void NRCRemoteSolenoid::execute_impl(packetptr_t packetptr)
@@ -47,50 +47,6 @@ void NRCRemoteSolenoid::execute(int32_t arg)
     }
 
 }
-void NRCRemoteSolenoid::arm_impl(packetptr_t packetptr)
-{
-    SimpleCommandPacket armingpacket(*packetptr);
-    arm(armingpacket.arg);
-}
-
-void NRCRemoteSolenoid::arm(int32_t arg)
-{
-    if (arg != 1)
-    {
-        m_contCheckOverride = false;
-    }
-    else
-    {
-        m_contCheckOverride = true;
-    }
-
-    updateContinuity();
-
-    if (this->_state.getStatus() == static_cast<uint16_t>(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED) || (this->_state.flagSetAnd(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED, LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY) && m_contCheckOverride))
-    {
-        this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
-        this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
-    }
-};
-
-void NRCRemoteSolenoid::updateContinuity()
-{
-    if (digitalRead(_contPin)) // high if continuity - True
-    {
-        if (this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
-        {
-            this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
-        }
-    }
-    else
-    {
-        if (!this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
-        {
-            this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
-        }
-    }
-}
-
 
 void NRCRemoteSolenoid::loadCalibration(){
     
@@ -124,14 +80,3 @@ void NRCRemoteSolenoid::calibrate_impl(packetptr_t packetptr){
     
     setNormalState(calibrate_comm.normalState);
 }
-
-// 1 this pc
-// 0 serial direct connection
-// 10 ID closest to usb
-// 3 arm (arg is 1 for overide continuity) 2 fire (seconds in ms)
-// 0 (arg)
-
-
-
-// std arming is arg 0
-// need this to not work if no continuity
