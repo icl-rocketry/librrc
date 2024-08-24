@@ -25,7 +25,7 @@ public:
    NRCRemoteFlowSensor(RnpNetworkManager &netman, pcnt_unit_t unit, pcnt_channel_t channel, uint8_t _gpioSig  ,float k):NRCRemoteSensorBase(netman),         
                                                                     pcnt(unit, channel, _gpioSig),
                                                                     // ledc(_gpioLEDC),
-                                                                    movingAvg(50),
+                                                                    movingAvg(10),
                                                                      _k(k){};
 
 
@@ -43,7 +43,7 @@ public:
     void update(){
         // ledc.update();
         _flowSensorCurrTime = esp_timer_get_time();
-        if (_flowSensorCurrTime - _flowSensorPrevTime < 2E4)return;
+        if (_flowSensorCurrTime - _flowSensorPrevTime < 5E3)return;
         pcnt.update();
         //get current count 
         _flowSensorCurrCount = pcnt.getCount();
@@ -66,6 +66,7 @@ public:
         _flowRate = 1E6*_k*((float)countDiff/(float)(_flowSensorCurrTime - _flowSensorPrevTime))*0.5;
         // Serial.println(_flowRate);
         movingAvg.update(_flowRate); 
+        // _AvgflowRate = movingAvg.getAvg();
         _AvgflowRate = movingAvg.getAvg();
         //update previous count
          _flowSensorPrevCount = _flowSensorCurrCount;
