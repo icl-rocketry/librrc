@@ -97,6 +97,10 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
             this->NRCRemoteBase<NRCRemotePyro>::getstate_impl(std::move(packetptr));
         }
 
+        void disarm_impl(packetptr_t packetptr)
+        {
+            disarm();
+        }
         
         //Adapter Interface
 
@@ -136,10 +140,11 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
         {
             this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
             this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
+            execute(0);
         };
 
         /**
-         * @brief Pyro exectutor
+         * @brief Pyro executor
          * 
          * @param arg time the pyro is switched on for
          */
