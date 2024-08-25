@@ -28,7 +28,8 @@ public:
     };
 
     /**
-     * @brief Change duty of pwm channel specifing duty within range [0,2^m_res]
+     * @brief Change duty of pwm channel specifing duty within range [0,2^m_res]. MaxDuty = 2^m_res
+     *      Hint: use LIBRRC::RangeMap to remap your required range to the range [0, MaxDuty]
      *
      * @param duty
      */
@@ -43,7 +44,8 @@ public:
     };
 
     /**
-     * @brief Change duty cycle of pwm channel, specifiyng pulse width
+     * @brief Change duty cycle of pwm channel, specifiyng pulse width. 
+     *        Hint: Keep track of what the underlying base frequency is...
      *
      * @param usec
      */
