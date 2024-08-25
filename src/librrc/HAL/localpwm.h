@@ -69,11 +69,21 @@ public:
         return m_freq;
     };
 
+    void setPWMParam(uint32_t freq, uint8_t res)
+    {
+        //detach channel
+        ledcDetachPin(m_pin);
+        m_freq = freq;
+        m_res = res;
+        // re-init channel
+        setupLEDC();
+    }
+
 private:
     const uint8_t m_pin;
     const uint8_t m_channel;
-    const uint32_t m_freq;
-    const uint8_t m_res;
+    uint32_t m_freq;
+    uint8_t m_res;
 
     bool m_initialized;
 
