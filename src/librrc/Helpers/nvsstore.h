@@ -20,7 +20,8 @@ public:
         Servo = 4,
         Canard = 5,
         CapFill = 6,
-        Potentiometer = 7
+        Potentiometer = 7,
+        Solenoid = 8
     };
     
     NVSStore(std::string NVSName, NVSStore::calibrationType calibrationType):
