@@ -11,7 +11,7 @@ class NRCRemoteSensorBase : public NRCRemoteBase<Derived>
     public:
         NRCRemoteSensorBase(RnpNetworkManager& networkmanager) : NRCRemoteBase<Derived>(networkmanager)
         {
-            this->_state.newFlag(COMPONENT_STATUS_FLAGS::NOMINAL); // initlaize sensor to nominal state
+            this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL); // initlaize sensor to nominal state
         };
 
     protected:

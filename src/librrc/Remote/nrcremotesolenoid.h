@@ -27,6 +27,7 @@ public:
         }
     }
 
+
    
 protected:
 
@@ -39,4 +40,5 @@ protected:
     void execute_impl(packetptr_t packetptr);
     void loadCalibration();
     void calibrate_impl(packetptr_t packetptr);
+
 };
