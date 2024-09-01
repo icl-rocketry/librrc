@@ -25,22 +25,22 @@ class RemoteActuatorAdapter : public RocketActuator
         m_remoteActuator(remoteActuator)
         {};
 
-        void arm(int32_t arg) override { m_remoteActuator.arm(arg); };
+        void arm(int32_t arg) override { m_remoteActuator.localArm_impl(arg); };
 
-        void disarm() override { m_remoteActuator.disarm(); };
+        void disarm() override { m_remoteActuator.localDisarm_impl(); };
 
         void execute(int32_t param) override
         {
             if (getState().flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
             {
-                m_remoteActuator.execute(param);
+                m_remoteActuator.localExecute_impl(param);
             }
         };
 
         void updateState() override 
         {
             lastStateRequestTime = millis();
-            m_remoteActuator.updateState();
+            m_remoteActuator.localUpdateState_impl();
             lastStateUpdateTime = millis();
         };
 

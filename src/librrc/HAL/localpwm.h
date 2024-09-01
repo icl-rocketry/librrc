@@ -64,6 +64,11 @@ public:
         return std::pow(2, m_res);
     };
 
+    uint8_t getResolution()
+    {
+        return m_res;
+    }
+
     uint32_t getFrequency()
     {
         return m_freq;

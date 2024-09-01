@@ -15,6 +15,7 @@
 #pragma once
 
 #include <functional>
+#include <string>
 
 #include <librrc/componentstatusflags.h>
 #include <librrc/Helpers/bitwiseflagmanager.h>
@@ -29,8 +30,9 @@ template<class Derived>
 class NRCRemoteBase
 {
 public:
-    NRCRemoteBase(RnpNetworkManager& networkmanager):
-    _networkmanager(networkmanager)
+    NRCRemoteBase(std::string name,RnpNetworkManager& networkmanager):
+    _networkmanager(networkmanager),
+    _name(name)
     {};
     /*
      * @brief Returns network callback bound to instance
@@ -52,6 +54,7 @@ protected:
     RnpNetworkManager& _networkmanager;
     RocketComponent::RocketComponentState _state;
     int32_t _value;
+    const std::string _name;
 
     void handlecommand(packetptr_t packetptr){
         //check packet is a command packet
@@ -79,7 +82,8 @@ protected:
 
         // }
     }
-    //default implementations - can be overriden by function hiding as this is crtp
+
+    //!NRCRemote Interface
     /**
      * @brief Handle getstate requests
      * 
@@ -87,6 +91,7 @@ protected:
      */
     void getstate_impl(packetptr_t packetptr)
     {
+        static_cast<Derived*>(this)->updateState_base();
         SimpleCommandPacket getstate_request(*packetptr);
         NRCStatePacket getstate_response;
         RnpHeader::generateResponseHeader(getstate_request.header,getstate_response.header);
@@ -103,5 +108,30 @@ protected:
     void calibrate_impl(packetptr_t packetptr){};
 
     void extendedCommandHandler_impl(const NRCPacket::NRC_COMMAND_ID commandID,packetptr_t packetptr){};
+
+    //!Local Component Interface
+
+    /**
+     * @brief Update component state local interface implmentation, can often be left empty if the
+     * underlying nrc component handles updating its value on its own and doesnt require a trigger. For example
+     * event based components like the solneoid valve where the possible states are open or closed, and this is updated
+     * when a new executor command is called.
+     * A good example where this method should be implmeneted is in the pyro class where we need to update the continuity 
+     * state as close to the original request time and we want to know exactly how long the pyro will be on for as possible to keep the data valid.
+     *
+     */
+    void localUpdateState_impl()
+    {
+        static_cast<Derived*>(this)->updateState_base();
+    }
+
+    //! Base methods
+
+    /**
+     * @brief Update hook to update state in the case of polling. If event based or component is handling polling itself, this can 
+     * be left empty, and is empty by default.
+     * 
+     */
+    void updateState_base(){};
      
 };

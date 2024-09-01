@@ -12,9 +12,13 @@ class ServoCalibrationPacket : public RnpPacket{
         {
             auto ret = RnpSerializer(
                 &ServoCalibrationPacket::command,
-                &ServoCalibrationPacket::min_angl,
-                &ServoCalibrationPacket::max_angl,
-                &ServoCalibrationPacket::home_angl
+                &ServoCalibrationPacket::defaultAngle,
+                &ServoCalibrationPacket::minAngle,
+                &ServoCalibrationPacket::maxAngle,
+                &ServoCalibrationPacket::minWidth,
+                &ServoCalibrationPacket::maxWidth,
+                &ServoCalibrationPacket::minAngleLimit,
+                &ServoCalibrationPacket::maxAngleLimit
             );
 
             return ret;
@@ -41,9 +45,54 @@ class ServoCalibrationPacket : public RnpPacket{
         void deserializeBody(std::vector<uint8_t>& buf);
         
         uint8_t command;
-        uint16_t min_angl;
-        uint16_t max_angl;
-        uint16_t home_angl;
+
+        /**
+         * @brief Default angle servo goes to
+         * 
+         */
+        uint32_t defaultAngle;
+        /**
+         * @brief angle corresponding to minium pulse width
+         * 
+         */
+        uint32_t minAngle;
+        /**
+         * @brief angle corresponding to maximum pulse width
+         * 
+         */
+        uint32_t maxAngle;
+        /**
+         * @brief Minium pulse width in Usec
+         * 
+         */
+        uint32_t minWidth;
+        /**
+         * @brief Maximum pulse width in Usec
+         * 
+         */
+        uint32_t maxWidth;
+        /**
+         * @brief Minimum Angle Limit
+         * 
+         */
+        uint32_t minAngleLimit;
+        /**
+         * @brief Maximum Angle Limit
+         * 
+         */
+        uint32_t maxAngleLimit;
+
+        /**
+         * @brief Base PWM frequency
+         * 
+         */
+        uint32_t pwmFreq;
+        /**
+         * @brief PWM resolution in n bits. NB for some pwm HAL types, this paramter
+         * is not changeable and so sending a different resolution will have no effect
+         * 
+         */
+        uint8_t pwmRes;
 
         static constexpr size_t size(){
             return getSerializer().member_size();

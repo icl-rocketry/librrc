@@ -76,42 +76,15 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
         };
 
     protected:  
-    
-        //NRCRemote Interface
 
-        void arm_impl(packetptr_t packetptr)
-        {
-            SimpleCommandPacket armingpacket(*packetptr);
-            arm(armingpacket.arg);
-        }
-
-        void execute_impl(packetptr_t packetptr)
-        {
-            SimpleCommandPacket execute_command(*packetptr);
-            execute(execute_command.arg);
-        }
-
-        void getstate_impl(packetptr_t packetptr)
-        {
-            updateState();
-            this->NRCRemoteBase<NRCRemotePyro>::getstate_impl(std::move(packetptr));
-        }
-
-        void disarm_impl(packetptr_t packetptr)
-        {
-            disarm();
-        }
-        
-        //Adapter Interface
-
-        friend class RemoteActuatorAdapter<NRCRemotePyro<GPIOHAL>>;
+        //! Base method implmentation
 
         /**
          * @brief Arm pyro, if arg == 1, continuity is ignored
          * 
          * @param arg 
          */
-        void arm(int32_t arg)
+        void arm_base(int32_t arg)
         {
             if (arg != 1)
             {
@@ -133,14 +106,14 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
         };
 
         /**
-         * @brief Disarm Method for Adapter Interface
+         * @brief Disarm Method
          * 
          */
-        void disarm()
+        void disarm_base()
         {
             this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
             this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
-            execute(0);
+            execute_base(0);
         };
 
         /**
@@ -148,7 +121,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
          * 
          * @param arg time the pyro is switched on for
          */
-        void execute(int32_t arg)
+        void execute_base(int32_t arg)
         {
             if (arg < 0)
             {
@@ -159,7 +132,8 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
 
             if (offTaskHandle == nullptr)
             {
-                disarm();
+                this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL);
+                this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED); // move component to disarm
                 this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR);
                 //maybe log this somewehere too
                 offTimeDeadline = 0;
@@ -177,7 +151,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
          * @brief Update the state and current value
          * 
          */
-        void updateState()
+        void updateState_base()
         {
             updateContinuity();
             if (offTimeDeadline <= millis())
@@ -190,6 +164,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
             }
         };
 
+    private:
         /**
          * @brief Check continuity of pyro
          * 
@@ -278,8 +253,15 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
 
     protected: //Variables
 
-        template<typename T> friend class NRCRemoteActuatorBase;
+        //Required interface friendships (yay friends)
+        
         template<typename T> friend class NRCRemoteBase;
+
+        //! NRCRemote Interface
+        template<typename T> friend class NRCRemoteActuatorBase;
+
+        //! Local Component Interface
+        friend class RemoteActuatorAdapter<NRCRemotePyro<GPIOHAL>>;
 
         /**
          * @brief gpio fire pin to trigger pyro
