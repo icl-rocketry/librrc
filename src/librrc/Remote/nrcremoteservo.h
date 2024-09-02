@@ -14,8 +14,11 @@
 #include <Preferences.h>
 
 template<typename PWMHAL = LocalPWM>
-class NRCRemoteServo : public NRCRemoteActuatorBase<NRCRemoteServo>
+class NRCRemoteServo : public NRCRemoteActuatorBase<NRCRemoteServo<PWMHAL>>
 {
+     //type alias for explict NRCRemoteBase type
+    using NRCRemoteActuatorBase_T = NRCRemoteActuatorBase<NRCRemoteServo>;
+    using NRCRemoteBase_T = NRCRemoteBase<NRCRemoteServo>;
 
 public:
     /**
@@ -44,20 +47,19 @@ public:
                    uint32_t minWidth = 500,
                    uint32_t maxWidth = 2500,
                    uint32_t minAngleLimit = 0,
-                   uint32_t maxAngleLimit = 360) : NRCRemoteActuatorBase(networkmanager),
-                                                        m_pwmOut(pwmOut),
-                                                        calibration{
-                                                            .defaultAngle=default_angle,
-                                                            .minAngle = minAngle,
-                                                            .maxAngle = maxAngle,
-                                                            .minWidth = minWidth,
-                                                            .maxWidth = maxWidth,
-                                                            .minAngleLimit = minAngleLimit,
-                                                            .maxAngleLimit = maxAngleLimit,
-                                                            .pwmFreq = pwmOut.getFrequency(),
-                                                            .pwmRes = pwmOut.getResolution()
-                                                            }
-                                                         {};
+                   uint32_t maxAngleLimit = 360) : NRCRemoteActuatorBase_T(name,networkmanager),
+                                                        m_pwmOut(pwmOut)
+                                                         {
+                                                            calibration.defaultAngle = defaultAngle;
+                                                            calibration.minAngle = minAngle;
+                                                            calibration.maxAngle = maxAngle;
+                                                            calibration.minWidth = minWidth;
+                                                            calibration.maxWidth = maxWidth;
+                                                            calibration.minAngleLimit = minAngleLimit;
+                                                            calibration.maxAngleLimit = maxAngleLimit;
+                                                            calibration.pwmFreq = pwmOut.getFrequency();
+                                                            calibration.pwmRes = pwmOut.getResolution();
+                                                         };
 
 
 
@@ -67,7 +69,7 @@ public:
     void setup()
     {
         //check for any pre-saved calibraiton
-        loadCalibration();
+        loadFromNVS();
         m_pwmOut.setPWMParam(calibration.pwmFreq,calibration.pwmRes);
         execute_base(calibration.defaultAngle); // send servo to default position
     };
@@ -96,7 +98,7 @@ protected:
         //get serialized packet data
         std::vector<uint8_t> serializedData = packetptr->getBody();
 
-        NVSStore _NVS(_name, NVSStore::calibrationType::Servo);
+        NVSStore _NVS(this->_name, NVSStore::calibrationType::Servo);
         //save to nvs store
         _NVS.saveBytes(serializedData);
         //deserialzie into calibration object
@@ -115,8 +117,13 @@ protected:
         {
             return;
         }
+        
+        //bound input angle on limits
+        int32_t angle = std::max(std::min(static_cast<uint32_t>(arg),calibration.maxAngleLimit),calibration.minAngleLimit);
+        this->_value = angle; //update angle
 
         int32_t pulseWidth = LIBRRC::rangemap<int32_t>(angle, calibration.minAngle, calibration.maxAngle, calibration.minWidth, calibration.maxWidth);
+        
         m_pwmOut.writeWidth(pulseWidth);
 
     };
@@ -126,7 +133,7 @@ private:
 
     void loadFromNVS()
     {
-        NVSStore _NVS(_name, NVSStore::calibrationType::Servo);
+        NVSStore _NVS(this->_name, NVSStore::calibrationType::Servo);
 
         std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
 
