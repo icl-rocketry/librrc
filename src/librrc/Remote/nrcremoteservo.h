@@ -9,6 +9,7 @@
 #include <librrc/Packets/servocalibrationpacket.h>
 #include <librrc/Helpers/nvsstore.h>
 #include <librrc/Helpers/rangemap.h>
+#include <librrc/Local/remoteactuatoradapter.h>
 
 #include <math.h>
 #include <Preferences.h>
