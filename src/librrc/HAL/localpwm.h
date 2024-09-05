@@ -84,7 +84,7 @@ public:
         setupLEDC();
     }
 
-private:
+public:
     const uint8_t m_pin;
     const uint8_t m_channel;
     uint32_t m_freq;
@@ -94,7 +94,7 @@ private:
 
     bool setupLEDC()
     {
-        if (ledcSetup(m_channel, m_freq, m_res))
+        if (!ledcSetup(m_channel, m_freq, m_res))
         {
             m_initialized = false; //? logging?
             return false;
