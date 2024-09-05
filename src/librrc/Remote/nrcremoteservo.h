@@ -143,6 +143,11 @@ private:
             return;
         }
 
+        if (calibSerialised.size() != calibration.size())
+        {
+            return;
+        }
+
         calibration.deserializeBody(calibSerialised); // load calibration from nvs into local calibraiton object
     };
 
