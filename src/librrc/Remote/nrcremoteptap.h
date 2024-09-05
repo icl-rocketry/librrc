@@ -26,7 +26,6 @@ class NRCRemotePTap : public NRCRemoteSensorBase<NRCRemotePTap>
 
         NRCRemotePTap(RnpNetworkManager& networkmanager,
                     uint8_t PTAPindex,
-                    uint8_t adc_channel,
                     float c = 1,
                     float grad = 1
                     ) : 
