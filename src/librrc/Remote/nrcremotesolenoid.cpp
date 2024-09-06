@@ -8,10 +8,11 @@
 
 void NRCRemoteSolenoid::setup()
 {
+    loadCalibration();
     // 1 always opens 0 always closes 
     pinMode(_togglePin, OUTPUT);
-    digitalWrite(_togglePin, LOW);
-    loadCalibration();
+    digitalWrite(_togglePin, normalState);
+    
     this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
     this->_value = normalState;
 
@@ -57,7 +58,6 @@ void NRCRemoteSolenoid::loadCalibration(){
 
     std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
     if(calibSerialised.size() == 0){
-        Serial.println("calib size == 0, " + String(_togglePin));
         setNormalState(0); // default is nominally closed
         return;
     }
