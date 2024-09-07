@@ -76,13 +76,13 @@ public:
     };
 
 
-    void setAngleLims(uint16_t min, uint16_t max)
+    void setAngleLims(uint32_t min, uint32_t max)
     {
         calibration.minAngleLimit = min;
         calibration.maxAngleLimit = max;
     };
 
-    void setDefault(uint16_t defaultAngle)
+    void setDefault(uint32_t defaultAngle)
     {
         calibration.defaultAngle = defaultAngle;
     };
