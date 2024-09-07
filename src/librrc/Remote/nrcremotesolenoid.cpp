@@ -13,8 +13,9 @@ void NRCRemoteSolenoid::setup()
     pinMode(_togglePin, OUTPUT);
     digitalWrite(_togglePin, normalState);
     
+    
     this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
-    this->_value = normalState;
+    this->_value = !normalState;
 
 }
 
