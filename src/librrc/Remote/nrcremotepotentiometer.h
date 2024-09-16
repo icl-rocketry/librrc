@@ -16,7 +16,7 @@
 #include <libriccore/riccorelogging.h>
 
 #include <librrc/Helpers/nvsstore.h>
-#include <librrc/packets/potentiometercalibrationpacket.h>
+#include <librrc/Packets/potentiometercalibrationpacket.h>
 
 class nrcremotepotentiometer : public NRCRemoteSensorBase<nrcremotepotentiometer>
 {
