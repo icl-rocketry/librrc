@@ -9,7 +9,9 @@ void nrcremotepotentiometer::update() {
         if (potentang < 0) {
             potentang = max_angl - abs(potentang);
         };
-        updateSensorValue(potentang);
+        avg.update(potentang);
+        m_avg_potentang = avg.getAvg();
+        updateSensorValue(m_avg_potentang);
 };
 
 void nrcremotepotentiometer::calibrate_impl(packetptr_t packetptr){
