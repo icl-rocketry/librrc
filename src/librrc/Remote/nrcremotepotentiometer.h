@@ -31,7 +31,7 @@ public:
 
     void update();
 
-    float getValue(){return potentang;}
+    float getValue(){return m_avg_potentang;}
 
     void calibrate_impl(packetptr_t packetptr);
 
