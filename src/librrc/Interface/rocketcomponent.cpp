@@ -22,7 +22,8 @@ bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::str
             return 1;
         }
     }
-    else if (millis()-lastStateRequestTime > stateExpiry)
+    
+    if (millis()-lastStateRequestTime > stateExpiry)
     {
         //current state has expired, request new state update
     
