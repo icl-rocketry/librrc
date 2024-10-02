@@ -37,6 +37,9 @@ class FlightComponentHandler : public NetworkedDynamicHandler<Object,Derived>{
             static_cast<Derived*>(this)->armComponents_impl();
         }
 
+        void disarmComponents(){
+            static_cast<Derived*>(this)->disarmComponents_impl();
+        }
 
         /**
          * @brief Requests a new state update from each component
