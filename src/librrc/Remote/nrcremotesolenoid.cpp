@@ -8,44 +8,31 @@
 
 void NRCRemoteSolenoid::setup()
 {
-    // 1 always opens 0 always closes 
-    pinMode(_togglePin, OUTPUT);
-    digitalWrite(_togglePin, LOW);
     loadCalibration();
-    this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
-    this->_value = normalState;
+    // 1 always opens 0 always closes 
+
+    //setup pin -> write default state
+    pinMode(_togglePin, OUTPUT);
+    digitalWrite(_togglePin, normalState);
+    
+    // if we have a NO valve (normalState = 1), we want te default value
+    // to be CLOSED which means we digital write the pin so that the valve closes,
+    //but this represents the closed state which maps to this->_value = 0
+    this->_value = !normalState;
 
 }
 
-void NRCRemoteSolenoid::execute_impl(packetptr_t packetptr)
-{
-    SimpleCommandPacket execute_command(*packetptr);
-    execute(execute_command.arg);
-}
+// void NRCRemoteSolenoid::execute_impl(packetptr_t packetptr)
+// {
+//     SimpleCommandPacket execute_command(*packetptr);
+//     execute(execute_command.arg);
+// }
 
-void NRCRemoteSolenoid::execute(int32_t arg) 
+void NRCRemoteSolenoid::execute_base(int32_t arg) 
 {
-    if (arg < 0)
-    {
-        return;
-    }
-    if (!this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
-    { 
-        return;
-    }  
     _value = arg; // 1 always opens 0 always closes    
-    if (normalState == 0 && arg == 0) { 
-        digitalWrite(_togglePin, LOW);
-    }
-    if (normalState == 0 && arg == 1) { 
-        digitalWrite(_togglePin, HIGH);
-    }
-    if (normalState == 1 && arg == 0) { 
-        digitalWrite(_togglePin, HIGH);
-    }
-    if (normalState == 1 && arg == 1) { 
-        digitalWrite(_togglePin, LOW);
-    }
+
+    digitalWrite(_togglePin,normalState^arg);
 
 }
 
@@ -57,14 +44,15 @@ void NRCRemoteSolenoid::loadCalibration(){
 
     std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
     if(calibSerialised.size() == 0){
-        Serial.println("calib size == 0, " + String(_togglePin));
-        setNormalState(0); // default is nominally closed
+        // setNormalState(0); // default is nominally closed
+        normalState = 0; // default NC
         return;
     }
     SolenoidCalibrationPacket calibpacket;
     calibpacket.deserializeBody(calibSerialised);
 
-    setNormalState(calibpacket.normalState);
+    normalState = calibpacket.normalState;
+    // setNormalState(calibpacket.normalState);
 
 }
 
@@ -79,5 +67,7 @@ void NRCRemoteSolenoid::calibrate_impl(packetptr_t packetptr){
     
     _NVS.saveBytes(serialisedvect);
     
-    setNormalState(calibrate_comm.normalState);
+    normalState = calibrate_comm.normalState;
+
+    // setNormalState(calibrate_comm.normalState);
 }

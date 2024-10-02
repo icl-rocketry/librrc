@@ -9,6 +9,7 @@
 #include <librrc/Packets/servocalibrationpacket.h>
 #include <librrc/Helpers/nvsstore.h>
 #include <librrc/Helpers/rangemap.h>
+#include <librrc/Local/remoteactuatoradapter.h>
 
 #include <math.h>
 #include <Preferences.h>
@@ -75,13 +76,13 @@ public:
     };
 
 
-    void setAngleLims(uint16_t min, uint16_t max)
+    void setAngleLims(uint32_t min, uint32_t max)
     {
         calibration.minAngleLimit = min;
         calibration.maxAngleLimit = max;
     };
 
-    void setDefault(uint16_t defaultAngle)
+    void setDefault(uint32_t defaultAngle)
     {
         calibration.defaultAngle = defaultAngle;
     };
@@ -138,6 +139,11 @@ private:
         std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
 
         if (calibSerialised.size() == 0)
+        {
+            return;
+        }
+
+        if (calibSerialised.size() != calibration.size())
         {
             return;
         }

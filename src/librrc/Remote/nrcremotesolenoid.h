@@ -19,15 +19,6 @@ public:
     {};
 
     void setup();
-    void setNormalState(uint16_t state) {
-        if (state == 0) {
-            normalState = 0;
-        } else if (state == 1) {
-            normalState = 1;
-        }
-    }
-
-
    
 protected:
 
@@ -35,9 +26,15 @@ protected:
     friend class NRCRemoteBase;
 
     const uint8_t _togglePin;
+    /**
+     * @brief 0 - NC
+     *        1 - NO
+     * 
+     */
     bool normalState = 0; // 0 = normally closed, 1 = normally open
-    void execute(int32_t arg);
-    void execute_impl(packetptr_t packetptr);
+
+    void execute_base(int32_t arg);
+
     void loadCalibration();
     void calibrate_impl(packetptr_t packetptr);
 

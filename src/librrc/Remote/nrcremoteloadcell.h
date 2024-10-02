@@ -13,11 +13,11 @@
 
 #include <stdint.h>
 
-#include <librrc/remote/nrcremotesensorbase.h>
+#include <librrc/Remote/nrcremotesensorbase.h>
 #include <librnp/rnp_networkmanager.h>
 
 #include <librrc/Helpers/nvsstore.h>
-#include <librrc/packets/loadcellcalibrationpacket.h>
+#include <librrc/Packets/loadcellcalibrationpacket.h>
 
 class NRCRemoteLoadcell : public NRCRemoteSensorBase<NRCRemoteLoadcell>
 {

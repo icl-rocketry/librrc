@@ -11,13 +11,13 @@
  *
  */
 
-#include <librrc/remote/nrcremotesensorbase.h>
+#include <librrc/Remote/nrcremotesensorbase.h>
 
 #include <librnp/rnp_networkmanager.h>
 #include <librnp/rnp_packet.h>
 
 #include <librrc/Helpers/nvsstore.h>
-#include <librrc/packets/ptapcalibrationpacket.h>
+#include <librrc/Packets/ptapcalibrationpacket.h>
 
 class NRCRemotePTap : public NRCRemoteSensorBase<NRCRemotePTap>
 {
@@ -26,7 +26,6 @@ class NRCRemotePTap : public NRCRemoteSensorBase<NRCRemotePTap>
 
         NRCRemotePTap(RnpNetworkManager& networkmanager,
                     uint8_t PTAPindex,
-                    uint8_t adc_channel,
                     float c = 1,
                     float grad = 1
                     ) : 
