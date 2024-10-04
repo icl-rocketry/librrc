@@ -26,7 +26,7 @@ bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::str
     {
         //current state has expired, request new state update
         this->updateState();
-        this->_logcb(handler + " Component: " + std::to_string(cid) + "Update");
+        // this->_logcb(handler + " Component: " + std::to_string(cid) + "Update");
     }
     //check if the component state has changed to prevent spamming of log messages
     if (currentState.getStatus() != previousStatus)
