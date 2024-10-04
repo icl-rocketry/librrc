@@ -21,26 +21,30 @@ bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::str
             this->updateState(); 
             return 1;
         }
-    }
-    
-    if (millis()-lastStateRequestTime > stateExpiry)
+    } 
+    else if (millis()-lastStateRequestTime > stateExpiry)
     {
         //current state has expired, request new state update
-    
         this->updateState();
+        this->_logcb(handler + " Component: " + std::to_string(cid) + "Update");
     }
-    
-    if (!currentState.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
+    //check if the component state has changed to prevent spamming of log messages
+    if (currentState.getStatus() != previousStatus)
     {
-        //check if the component state has changed to prevent spamming of log messages
-        if (currentState.getStatus() != previousStatus)
+        //update previous state
+        this->previousStatus = currentState.getStatus();
+
+        if (!currentState.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
         {
             //log the changes
             this->_logcb(handler + " Component: " + std::to_string(cid) + " error: " + std::to_string(currentState.getStatus()));
             //update previous state
-            this->previousStatus = currentState.getStatus();
+            return 1;
+            
+        }else{
+            this->_logcb(handler + " Component: " + std::to_string(cid) + "Nominal");
         }
-        return 1;
+        
     }
 
     return 0;
