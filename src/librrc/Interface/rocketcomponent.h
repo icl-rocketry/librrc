@@ -64,8 +64,8 @@ class RocketComponent{
 
         virtual RocketComponentState& getStateMutable() = 0;
         LIBRRC::component_status_flags_t previousStatus;
-        uint32_t lastStateUpdateTime;
-        uint32_t lastStateRequestTime;
+        uint32_t lastStateUpdateTime = 0;
+        uint32_t lastStateRequestTime = 0;
 
 
         LIBRRC::RRCLog::LogCallback_t _logcb;
