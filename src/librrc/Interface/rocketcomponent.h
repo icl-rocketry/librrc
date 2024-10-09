@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <string>
+#include <optional>
 
 #include <librrc/Helpers/bitwiseflagmanager.h>
 #include <librrc/Helpers/rrclog.h>
@@ -63,7 +64,8 @@ class RocketComponent{
         // virtual RocketComponentState* p_getState() = 0;
 
         virtual RocketComponentState& getStateMutable() = 0;
-        LIBRRC::component_status_flags_t previousStatus;
+        std::optional<LIBRRC::component_status_flags_t> previousStatus = std::nullopt; //intialized to empty
+        
         uint32_t lastStateUpdateTime = 0;
         uint32_t lastStateRequestTime = 0;
 

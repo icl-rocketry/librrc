@@ -28,23 +28,28 @@ bool RocketComponent::flightCheck(uint32_t timeout,uint32_t stateExpiry,std::str
         this->updateState();
         // this->_logcb(handler + " Component: " + std::to_string(cid) + "Update");
     }
-    //check if the component state has changed to prevent spamming of log messages
-    if (currentState.getStatus() != previousStatus)
+
+
+    //check if the component state has changed or initialzied
+    if (currentState.getStatus() != previousStatus || !previousStatus)
     {
         //update previous state
-        this->previousStatus = currentState.getStatus();
+        previousStatus = currentState.getStatus();
 
         if (!currentState.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
         {
             //log the changes
             this->_logcb(handler + " Component: " + std::to_string(cid) + " error: " + std::to_string(currentState.getStatus()));
-            //update previous state
-            return 1;
             
         }else{
             this->_logcb(handler + " Component: " + std::to_string(cid) + "Nominal");
         }
         
+    }
+
+    if (!currentState.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::NOMINAL))
+    {
+        return 1;
     }
 
     return 0;
