@@ -19,7 +19,8 @@ namespace NRCPacket{
         EXECUTE=2,
         ARM=3,
         DISARM=4,
-        CALIBRATE=5
+        CALIBRATE=5,
+        TELEMETRY=8
     };
 
 };
