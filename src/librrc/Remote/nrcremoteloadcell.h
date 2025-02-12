@@ -25,8 +25,10 @@ public:
 
     NRCRemoteLoadcell(RnpNetworkManager& netman,  uint8_t loadCellIndex, uint32_t zeroReading = 0, float grad = 1, float localgval = 9.81);
 
-    float getWeight(){return _Weight;};
+    float getWeight(){return _Weight;};//!Will be deprecated soonTM, use getProcessed() instead
     float getMass(){return (float)(_Weight)/(float)_g;};
+
+    float getProcessed(){return _Weight;};
 
     void calibrate_impl(packetptr_t packetptr);
     

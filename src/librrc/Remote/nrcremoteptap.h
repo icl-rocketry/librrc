@@ -46,7 +46,8 @@ class NRCRemotePTap : public NRCRemoteSensorBase<NRCRemotePTap>
         void update(int32_t ADCReading);
         void setup(){loadCalibration();};
         
-        float getPressure(){return _Pressure;};
+        float getProcessed(){return _Pressure;};
+        float getPressure(){return _Pressure;}; //!Deprecated, will be removed soonTM, use getProcessed() instead
 
     protected:
 
