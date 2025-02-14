@@ -18,8 +18,7 @@
 class LocalPWM
 {
 public:
-    LocalPWM(uint8_t pin, uint8_t channel, uint32_t freq = 50, uint8_t res = 14) : m_pin(pin),
-                                                                                   m_channel(channel),
+    LocalPWM(uint8_t pin, uint32_t freq = 50, uint8_t res = 14) : m_pin(pin),
                                                                                    m_freq(freq),
                                                                                    m_res(res),
                                                                                    m_initialized(false)
@@ -40,7 +39,7 @@ public:
             return; //? maybe log not initlaized??
         }
 
-        ledcWrite(m_channel, duty); // this auto checks for if duty is out of range but maybe we should check in this wrapper instead?
+        ledcWrite(m_pin, duty); // this auto checks for if duty is out of range but maybe we should check in this wrapper instead?
     };
 
     /**
@@ -77,7 +76,7 @@ public:
     void setPWMParam(uint32_t freq, uint8_t res)
     {
         //detach channel
-        ledcDetachPin(m_pin);
+        ledcDetach(m_pin);
         m_freq = freq;
         m_res = res;
         // re-init channel
@@ -86,7 +85,6 @@ public:
 
 public:
     const uint8_t m_pin;
-    const uint8_t m_channel;
     uint32_t m_freq;
     uint8_t m_res;
 
@@ -94,12 +92,11 @@ public:
 
     bool setupLEDC()
     {
-        if (!ledcSetup(m_channel, m_freq, m_res))
+        if (!ledcAttach(m_pin, m_freq, m_res))
         {
             m_initialized = false; //? logging?
             return false;
         }
-        ledcAttachPin(m_pin, m_channel);
         m_initialized = true;
         return true;
     };
