@@ -6,8 +6,6 @@
 
 #include <librrc/Helpers/nvsstore.h>
 
-m_contPin(contPin);
-
 void NRCRemoteSolenoid::setup()
 {
     loadCalibration();
@@ -67,7 +65,7 @@ void NRCRemoteSolenoid::loadCalibration(){
 
 void updateContinuity()
         {
-            if (m_contPin.digitalRead())
+            if (digitalRead(m_contPin))
             {
                 if (this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
                 {
