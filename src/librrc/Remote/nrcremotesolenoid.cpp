@@ -6,6 +6,8 @@
 
 #include <librrc/Helpers/nvsstore.h>
 
+m_contPin(contPin);
+
 void NRCRemoteSolenoid::setup()
 {
     loadCalibration();
@@ -27,6 +29,13 @@ void NRCRemoteSolenoid::setup()
 //     SimpleCommandPacket execute_command(*packetptr);
 //     execute(execute_command.arg);
 // }
+
+void updateState_base()
+{
+    updateContinuity();
+
+};
+
 
 void NRCRemoteSolenoid::execute_base(int32_t arg) 
 {
@@ -55,6 +64,25 @@ void NRCRemoteSolenoid::loadCalibration(){
     // setNormalState(calibpacket.normalState);
 
 }
+
+void updateContinuity()
+        {
+            if (m_contPin.digitalRead())
+            {
+                if (this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+                {
+                    this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+                }
+            }
+            else
+            {
+
+                if (!this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+                {
+                    this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+                }
+            }
+        } 
 
 void NRCRemoteSolenoid::calibrate_impl(packetptr_t packetptr){
     
