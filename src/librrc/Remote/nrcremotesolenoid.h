@@ -39,5 +39,6 @@ protected:
 
     void loadCalibration();
     void calibrate_impl(packetptr_t packetptr);
-
+    void updateState_base();
+    void updateContinuity();
 };
