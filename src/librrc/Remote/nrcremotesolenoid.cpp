@@ -63,7 +63,7 @@ void NRCRemoteSolenoid::loadCalibration(){
 
 }
 
-void updateContinuity()
+void NRCRemoteSolenoid::updateContinuity()
         {
             if (digitalRead(m_contPin))
             {
