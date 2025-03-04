@@ -28,7 +28,7 @@ void NRCRemoteSolenoid::setup()
 //     execute(execute_command.arg);
 // }
 
-void updateState_base()
+void NRCRemoteSolenoid::updateState_base()
 {
     updateContinuity();
 
