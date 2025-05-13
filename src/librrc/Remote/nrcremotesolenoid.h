@@ -13,9 +13,10 @@ class NRCRemoteSolenoid : public NRCRemoteActuatorBase<NRCRemoteSolenoid>
 {
 
 public:
-    NRCRemoteSolenoid(uint8_t togglePin, RnpNetworkManager &networkmanager): 
+    NRCRemoteSolenoid(uint8_t togglePin, uint8_t contPin, RnpNetworkManager &networkmanager): 
     NRCRemoteActuatorBase(networkmanager),
-    _togglePin(togglePin)
+    _togglePin(togglePin),
+    m_contPin(contPin)
     {};
 
     void setup();
@@ -26,6 +27,7 @@ protected:
     friend class NRCRemoteBase;
 
     const uint8_t _togglePin;
+    const uint8_t m_contPin;
     /**
      * @brief 0 - NC
      *        1 - NO
@@ -37,5 +39,6 @@ protected:
 
     void loadCalibration();
     void calibrate_impl(packetptr_t packetptr);
-
+    void updateState_base();
+    void updateContinuity();
 };

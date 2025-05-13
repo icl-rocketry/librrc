@@ -28,6 +28,13 @@ void NRCRemoteSolenoid::setup()
 //     execute(execute_command.arg);
 // }
 
+void NRCRemoteSolenoid::updateState_base()
+{
+    updateContinuity();
+
+};
+
+
 void NRCRemoteSolenoid::execute_base(int32_t arg) 
 {
     _value = arg; // 1 always opens 0 always closes    
@@ -55,6 +62,25 @@ void NRCRemoteSolenoid::loadCalibration(){
     // setNormalState(calibpacket.normalState);
 
 }
+
+void NRCRemoteSolenoid::updateContinuity()
+        {
+            if (digitalRead(m_contPin))
+            {
+                if (this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+                {
+                    this->_state.deleteFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+                }
+            }
+            else
+            {
+
+                if (!this->_state.flagSet(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY))
+                {
+                    this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::ERROR_CONTINUITY);
+                }
+            }
+        } 
 
 void NRCRemoteSolenoid::calibrate_impl(packetptr_t packetptr){
     
