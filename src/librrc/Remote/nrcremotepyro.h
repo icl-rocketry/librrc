@@ -16,7 +16,7 @@
 #include <librrc/componentstatusflags.h>
 #include <librrc/Local/remoteactuatoradapter.h>
 
-template<typename GPIOHAL_FIRE = ArduinoGpio, typename GPIOHAL_CONT = ArduinoGpio>
+template<typename GPIOHAL_FIRE, typename GPIOHAL_CONT = GPIOHAL_FIRE >
 class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL_FIRE,GPIOHAL_CONT>>
 {
     //type alias for ease of use
@@ -313,3 +313,4 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL_FIRE,GP
         uint32_t offTimeDeadline;
 
 };
+
