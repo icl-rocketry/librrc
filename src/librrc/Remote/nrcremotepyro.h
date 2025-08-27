@@ -16,11 +16,12 @@
 #include <librrc/componentstatusflags.h>
 #include <librrc/Local/remoteactuatoradapter.h>
 
-template<typename GPIOHAL = ArduinoGpio>
-class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
+template<typename GPIOHAL_FIRE = ArduinoGpio, typename GPIOHAL_CONT = ArduinoGpio>
+class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL_FIRE,GPIOHAL_CONT>>
 {
     //type alias for ease of use
-    using PINMODE = typename GPIOHAL::PINMODE;
+    using PINMODE_FIRE = typename GPIOHAL_FIRE::PINMODE;
+    using PINMODE_CONT = typename GPIOHAL_CONT::PINMODE;
 
     //type alias for explict NRCRemoteBase type
     using NRCRemoteActuatorBase_T = NRCRemoteActuatorBase<NRCRemotePyro>;
@@ -36,7 +37,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
          * @param contPin 
          * @param networkmanager 
          */
-        NRCRemotePyro(GPIOHAL firePin, GPIOHAL contPin, RnpNetworkManager &networkmanager) : 
+        NRCRemotePyro(GPIOHAL_FIRE firePin, GPIOHAL_CONT contPin, RnpNetworkManager &networkmanager) : 
         NRCRemoteActuatorBase_T(networkmanager),
         m_firePin(firePin),
         m_contPin(contPin)
@@ -49,9 +50,9 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
         void setup()
         {
             m_firePin.digitalWrite(0); //ensure output is zero
-            m_firePin.pinMode(PINMODE::GPIO_OUTPUT);
+            m_firePin.pinMode(PINMODE_FIRE::GPIO_OUTPUT);
             m_firePin.digitalWrite(0);
-            m_contPin.pinMode(PINMODE::GPIO_INPUT);
+            m_contPin.pinMode(PINMODE_CONT::GPIO_INPUT);
 
             this->_state.newFlag(LIBRRC::COMPONENT_STATUS_FLAGS::DISARMED);
             updateContinuity();
@@ -199,7 +200,7 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
             // spawn off Task
             struct TaskData_t
             {
-                GPIOHAL firePin;
+                GPIOHAL_FIRE firePin;
             }; 
 
             TaskData_t taskdata{m_firePin};
@@ -261,19 +262,19 @@ class NRCRemotePyro : public NRCRemoteActuatorBase<NRCRemotePyro<GPIOHAL>>
         template<typename T> friend class NRCRemoteActuatorBase;
 
         //! Local Component Interface
-        friend class RemoteActuatorAdapter<NRCRemotePyro<GPIOHAL>>;
+        friend class RemoteActuatorAdapter<NRCRemotePyro<GPIOHAL_FIRE,GPIOHAL_CONT>>;
 
         /**
          * @brief gpio fire pin to trigger pyro
          * 
          */
-        GPIOHAL m_firePin;
+        GPIOHAL_FIRE m_firePin;
 
         /**
          * @brief gpio continuity pin to check continuity across pyro
          * 
          */
-        GPIOHAL m_contPin;
+        GPIOHAL_CONT m_contPin;
 
         /**
          * @brief Flag indicating if continuity checking is overriden
