@@ -68,7 +68,7 @@ class FlightComponentHandler : public NetworkedDynamicHandler<Object,Derived>{
                 return {};
             }
 
-            return [&componentID, this](int32_t param)
+            return [componentID, this](int32_t param)
             { this->getObject(componentID)->execute(param); };
         };
 
