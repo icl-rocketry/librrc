@@ -44,11 +44,11 @@ public:
                    std::string name = "",
                    uint32_t defaultAngle = 0,
                    uint32_t minAngle = 0,
-                   uint32_t maxAngle = 180,
-                   uint32_t minWidth = 500,
-                   uint32_t maxWidth = 2500,
+                   uint32_t maxAngle = 100,
+                   uint32_t minWidth = 1100,
+                   uint32_t maxWidth = 1940,
                    uint32_t minAngleLimit = 0,
-                   uint32_t maxAngleLimit = 360) : NRCRemoteActuatorBase_T(name,networkmanager),
+                   uint32_t maxAngleLimit = 100) : NRCRemoteActuatorBase_T(name,networkmanager),
                                                         m_pwmOut(pwmOut)
                                                          {
                                                             calibration.defaultAngle = defaultAngle;
@@ -67,12 +67,14 @@ public:
     NRCRemoteServo() = delete; 
 
 
-    void setup()
+    void setup(bool useNVS = true)
     {
-        //check for any pre-saved calibraiton
-        loadFromNVS();
+        if (useNVS) {
+            loadFromNVS();
+        }
+
         m_pwmOut.setPWMParam(calibration.pwmFreq,calibration.pwmRes);
-        execute_base(calibration.defaultAngle); // send servo to default position
+        execute_base(calibration.defaultAngle);
     };
 
 
@@ -150,7 +152,63 @@ private:
 
         calibration.deserializeBody(calibSerialised); // load calibration from nvs into local calibraiton object
     };
+// void loadFromNVS()
+// {
+//     delay(7000);
+//     Serial.println("===== ENTERING loadFromNVS =====");
 
+//     NVSStore _NVS(this->_name, NVSStore::calibrationType::Servo);
+
+//     std::vector<uint8_t> calibSerialised = _NVS.loadBytes();
+
+//     Serial.print("Servo name: ");
+//     Serial.println(this->_name.c_str());
+
+//     Serial.print("Loaded byte count: ");
+//     Serial.println((int)calibSerialised.size());
+
+//     if (calibSerialised.size() == 0)
+//     {
+//         Serial.println("No calibration stored in NVS.");
+//         return;
+//     }
+
+//     if (calibSerialised.size() != calibration.size())
+//     {
+//         Serial.print("Size mismatch. Stored = ");
+//         Serial.print((int)calibSerialised.size());
+//         Serial.print(", expected = ");
+//         Serial.println((int)calibration.size());
+//         return;
+//     }
+
+//     calibration.deserializeBody(calibSerialised);
+//     Serial.println("Calibration loaded from NVS.");
+//     Serial.println("---- Loaded calibration values ----");
+//     Serial.print("command: ");
+//     Serial.println(calibration.command);
+
+//     Serial.print("defaultAngle: ");
+//     Serial.println(calibration.defaultAngle);
+
+//     Serial.print("minAngle: ");
+//     Serial.println(calibration.minAngle);
+
+//     Serial.print("maxAngle: ");
+//     Serial.println(calibration.maxAngle);
+
+//     Serial.print("minWidth: ");
+//     Serial.println(calibration.minWidth);
+
+//     Serial.print("maxWidth: ");
+//     Serial.println(calibration.maxWidth);
+
+//     Serial.print("minAngleLimit: ");
+//     Serial.println(calibration.minAngleLimit);
+
+//     Serial.print("maxAngleLimit: ");
+//     Serial.println(calibration.maxAngleLimit);
+// }
 protected:
     //variables
     
